@@ -1,4 +1,4 @@
-# Copia la web a dist/ y la publica en GitHub Pages en cada push a main.
+# Compila la web en dist/ (con el 3D de la portada) y la publica en GitHub Pages en cada push a main.
 # Requisito (una sola vez): Settings → Pages → Build and deployment → Source: «GitHub Actions».
 name: Publicar en GitHub Pages
 
@@ -23,13 +23,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # Sin dependencias: no hace falta npm ci
       - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
+          cache: npm
 
       - id: pages
         uses: actions/configure-pages@v6
+
+      - run: npm ci
 
       - run: npm run check
 

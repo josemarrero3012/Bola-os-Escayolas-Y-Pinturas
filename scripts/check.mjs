@@ -1,5 +1,5 @@
 // Comprueba la página antes de publicar: recursos que existen, anclas que apuntan
-// a algo, imágenes con texto alternativo, datos estructurados válidos y JavaScript sin errores de sintaxis.
+// a algo, imágenes con texto alternativo, piezas del 3D, datos estructurados válidos y JavaScript sin errores de sintaxis.
 // Uso: node scripts/check.mjs [carpeta]   (por defecto, la raíz del proyecto)
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
@@ -23,6 +23,12 @@ for (const ruta of rutas) {
 const css = readFileSync(join(raiz, "assets/css/styles.css"), "utf8");
 for (const [, ruta] of css.matchAll(/url\("(\.\.\/[^"]+)"\)/g)) {
   if (!existsSync(join(raiz, "assets/css", ruta))) errores.push(`Falta el recurso ${ruta} (styles.css)`);
+}
+
+// Portada en 3D: modelo de Blender y, en la web compilada, el módulo empaquetado
+const tresD = ["assets/3d/roseton.glb", raiz === "." ? "src/portada-3d.js" : "assets/js/portada-3d.js"];
+for (const ruta of tresD) {
+  if (!existsSync(join(raiz, ruta))) errores.push(`Falta ${ruta}`);
 }
 
 // Anclas internas
