@@ -1,0 +1,15 @@
+{
+  "name": "bolanos-escayolas-y-pinturas",
+  "private": true,
+  "description": "Prototipo web de Escayolas y Pinturas Bolaños",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "build": "node scripts/build.mjs",
+    "check:dist": "node scripts/check.mjs dist",
+    "preview": "python3 -m http.server 8765 --directory dist"
+  }
+}

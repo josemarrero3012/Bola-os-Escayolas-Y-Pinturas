@@ -1,0 +1,20 @@
+# Compilación
+node_modules/
+dist/
+
+# Editores y sistema
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Registros y entorno local
+*.log
+.env
+.env.*
+!.env.example
+
+# Configuración personal de asistentes
+.claude/
+.codex/

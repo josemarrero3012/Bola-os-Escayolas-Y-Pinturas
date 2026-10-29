@@ -2,14 +2,16 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Escayolas y Pinturas Bolaños | Escayola, pladur y pintura en Las Palmas de Gran Canaria</title>
   <meta name="description" content="Techos de escayola, pladur, pintura, reformas, fachadas y azoteas en Las Palmas de Gran Canaria. Visita y presupuesto sin compromiso. Llama al 660 81 26 51.">
-  <meta name="theme-color" content="#F5F5F2">
+  <meta name="theme-color" content="#F6F6F3">
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/archivo-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/img/estuco.webp" as="image" type="image/webp">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <script>document.documentElement.classList.add("js");</script>
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_ES">
@@ -60,21 +62,25 @@
           <li><a href="#proceso">Cómo trabajamos</a></li>
           <li><a href="#contacto">Contacto</a></li>
         </ul>
+        <a class="nav-tel" href="tel:+34660812651">Llamar al 660 81 26 51</a>
       </nav>
 
       <a class="cabecera-tel" href="tel:+34660812651">
-        <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
         660 81 26 51
       </a>
 
-      <button class="menu-boton" type="button" aria-expanded="false" aria-controls="nav" data-menu>Menú</button>
+      <button class="menu-boton" type="button" aria-expanded="false" aria-controls="nav" aria-label="Abrir menú" data-menu>
+        <span class="menu-raya" aria-hidden="true"></span>
+        <span class="menu-raya" aria-hidden="true"></span>
+      </button>
     </div>
   </header>
 
   <main id="contenido">
 
-    <!-- Inicio: el techo, la cornisa y la pared -->
-    <section class="inicio" aria-labelledby="titulo-inicio">
+    <!-- Inicio: el techo, la cornisa y una pared de estuco bajo luz rasante -->
+    <section class="inicio" aria-labelledby="titulo-inicio" data-inicio>
       <div class="cornisa" aria-hidden="true">
         <span class="c-faja"></span>
         <span class="c-media-cana"></span>
@@ -87,13 +93,23 @@
         <span class="c-brillo"></span>
       </div>
 
+      <div class="luz" aria-hidden="true">
+        <div class="luz-relieve"></div>
+        <div class="luz-foco"></div>
+      </div>
+
       <div class="contenedor inicio-rejilla">
+        <h1 id="titulo-inicio" class="inicio-titulo">
+          <span class="linea">El acabado</span>
+          <span class="linea">se nota en</span>
+          <span class="linea">el techo.</span>
+        </h1>
+
         <div class="inicio-texto">
-          <h1 id="titulo-inicio" class="inicio-titulo">El acabado se nota en el techo.</h1>
           <p class="inicio-entrada">
             Escayola, pladur, pintura y reformas en Las Palmas de Gran Canaria.
-            Hacemos techos, paredes, fachadas y azoteas para viviendas,
-            comunidades, locales y empresas.
+            Techos, paredes, fachadas y azoteas para viviendas, comunidades,
+            locales y empresas.
           </p>
           <div class="acciones">
             <a class="boton" href="#contacto">Pedir presupuesto</a>
@@ -108,7 +124,7 @@
               <img
                 src="assets/img/hero-techo-1100.webp"
                 srcset="assets/img/hero-techo-640.webp 640w, assets/img/hero-techo-1100.webp 1100w"
-                sizes="(min-width: 960px) 40vw, 92vw"
+                sizes="(min-width: 960px) 30vw, 80vw"
                 width="1100" height="1372"
                 alt="Escayolista rematando con espátula una moldura en un techo"
                 fetchpriority="high">
@@ -118,96 +134,135 @@
       </div>
     </section>
 
-    <!-- Servicios -->
+    <!-- Servicios: una lista que se abre, con un visor de foto en escritorio -->
     <section class="seccion" id="servicios" aria-labelledby="titulo-servicios">
       <div class="contenedor">
         <div class="seccion-cabeza">
           <h2 id="titulo-servicios" class="titulo-seccion">Qué hacemos</h2>
           <p class="seccion-intro">
             Trabajamos en obra nueva y en reforma. Si tu obra necesita varios
-            oficios (escayola, pintura, alicatado), los hacemos nosotros y no
-            tienes que coordinar a nadie.
+            oficios, como escayola, pintura y alicatado, los hacemos nosotros
+            y no tienes que coordinar a nadie.
           </p>
         </div>
 
-        <ul class="servicios">
-          <li class="servicio" id="escayola">
-            <h3 class="servicio-nombre">Escayola y pladur</h3>
-            <div class="servicio-cuerpo">
-              <p>Techos lisos, sin ondas ni juntas a la vista, y remates limpios en cada encuentro con la pared. Es el oficio que da nombre a la casa.</p>
-              <ul class="servicio-lista">
-                <li>Techos continuos y registrables</li>
-                <li>Molduras, cornisas y refilos</li>
-                <li>Foseados para luz indirecta</li>
-                <li>Tabiques y trasdosados de pladur</li>
-              </ul>
-            </div>
-            <div class="servicio-imagen marco marco-fino">
-              <img src="assets/img/srv-escayola.webp" width="1000" height="671" loading="lazy" alt="Llana extendiendo pasta sobre una pared lisa">
-            </div>
-          </li>
+        <div class="servicios-rejilla">
+          <ul class="servicios" data-servicios>
+            <li class="servicio" id="escayola" data-servicio>
+              <h3 class="servicio-cabeza">
+                <button class="servicio-boton" type="button" aria-expanded="true" aria-controls="panel-escayola">
+                  <span class="servicio-nombre">Escayola y pladur</span>
+                  <span class="servicio-signo" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="servicio-panel" id="panel-escayola">
+                <div class="servicio-cuerpo">
+                  <p>Techos lisos, sin ondas ni juntas a la vista, y remates limpios en cada encuentro con la pared. Es el oficio que da nombre a la casa.</p>
+                  <ul class="servicio-lista">
+                    <li>Techos continuos y registrables</li>
+                    <li>Molduras, cornisas y refilos</li>
+                    <li>Foseados para luz indirecta</li>
+                    <li>Tabiques y trasdosados de pladur</li>
+                  </ul>
+                  <img class="servicio-foto" src="assets/img/srv-escayola.webp" width="1000" height="671" loading="lazy" alt="Llana extendiendo pasta sobre una pared lisa">
+                </div>
+              </div>
+            </li>
 
-          <li class="servicio" id="pintura">
-            <h3 class="servicio-nombre">Pintura</h3>
-            <div class="servicio-cuerpo">
-              <p>Interior y exterior para pisos, chalés, locales, oficinas y empresas. Antes de pintar preparamos bien la superficie: es lo que hace que la pintura dure.</p>
-              <ul class="servicio-lista">
-                <li>Pisos y chalés</li>
-                <li>Locales, oficinas y naves</li>
-                <li>Fachadas y patios</li>
-                <li>Revestimientos decorativos</li>
-              </ul>
-            </div>
-            <div class="servicio-imagen marco marco-fino">
-              <img src="assets/img/srv-pintura.webp" width="1000" height="667" loading="lazy" alt="Botes de pintura azul abiertos junto a brochas y una carta de colores">
-            </div>
-          </li>
+            <li class="servicio" id="pintura" data-servicio>
+              <h3 class="servicio-cabeza">
+                <button class="servicio-boton" type="button" aria-expanded="false" aria-controls="panel-pintura">
+                  <span class="servicio-nombre">Pintura</span>
+                  <span class="servicio-signo" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="servicio-panel" id="panel-pintura">
+                <div class="servicio-cuerpo">
+                  <p>Interior y exterior para pisos, chalés, locales, oficinas y empresas. Antes de pintar preparamos bien la superficie: es lo que hace que la pintura dure.</p>
+                  <ul class="servicio-lista">
+                    <li>Pisos y chalés</li>
+                    <li>Locales, oficinas y naves</li>
+                    <li>Fachadas y patios</li>
+                    <li>Revestimientos decorativos</li>
+                  </ul>
+                  <img class="servicio-foto" src="assets/img/srv-pintura.webp" width="1000" height="667" loading="lazy" alt="Botes de pintura azul abiertos junto a brochas y una carta de colores">
+                </div>
+              </div>
+            </li>
 
-          <li class="servicio" id="reformas">
-            <h3 class="servicio-nombre">Reformas</h3>
-            <div class="servicio-cuerpo">
-              <p>Baños, cocinas y reformas completas de vivienda, con un único interlocutor desde el presupuesto hasta la entrega.</p>
-              <ul class="servicio-lista">
-                <li>Alicatado de baños y cocinas</li>
-                <li>Insonorización de paredes</li>
-                <li>Nuevas distribuciones con pladur</li>
-                <li>Remates y acabados</li>
-              </ul>
-            </div>
-            <div class="servicio-imagen marco marco-fino">
-              <img src="assets/img/srv-reformas.webp" width="667" height="667" loading="lazy" alt="Baño reformado con azulejo azul en espiga y lavabo sobre encimera">
-            </div>
-          </li>
+            <li class="servicio" id="reformas" data-servicio>
+              <h3 class="servicio-cabeza">
+                <button class="servicio-boton" type="button" aria-expanded="false" aria-controls="panel-reformas">
+                  <span class="servicio-nombre">Reformas</span>
+                  <span class="servicio-signo" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="servicio-panel" id="panel-reformas">
+                <div class="servicio-cuerpo">
+                  <p>Baños, cocinas y reformas completas de vivienda, con un único interlocutor desde el presupuesto hasta la entrega.</p>
+                  <ul class="servicio-lista">
+                    <li>Alicatado de baños y cocinas</li>
+                    <li>Insonorización de paredes</li>
+                    <li>Nuevas distribuciones con pladur</li>
+                    <li>Remates y acabados</li>
+                  </ul>
+                  <img class="servicio-foto" src="assets/img/srv-reformas.webp" width="667" height="667" loading="lazy" alt="Baño reformado con azulejo azul en espiga y lavabo sobre encimera">
+                </div>
+              </div>
+            </li>
 
-          <li class="servicio" id="fachadas">
-            <h3 class="servicio-nombre">Fachadas y trabajos verticales</h3>
-            <div class="servicio-cuerpo">
-              <p>Trabajamos en altura sin andamio. Es la solución para patios de luces y fachadas de comunidades donde montar un andamio es caro o directamente imposible.</p>
-              <ul class="servicio-lista">
-                <li>Pintura de patios y fachadas</li>
-                <li>Malla contra caída de cascotes</li>
-              </ul>
-            </div>
-            <div class="servicio-imagen marco marco-fino">
-              <img src="assets/img/srv-fachadas.webp" width="1000" height="750" loading="lazy" alt="Balcones de una fachada cubiertos con malla de protección azul">
-            </div>
-          </li>
+            <li class="servicio" id="fachadas" data-servicio>
+              <h3 class="servicio-cabeza">
+                <button class="servicio-boton" type="button" aria-expanded="false" aria-controls="panel-fachadas">
+                  <span class="servicio-nombre">Fachadas y trabajos verticales</span>
+                  <span class="servicio-signo" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="servicio-panel" id="panel-fachadas">
+                <div class="servicio-cuerpo">
+                  <p>Trabajamos en altura sin andamio. Es la solución para patios de luces y fachadas de comunidades donde montar un andamio es caro o directamente imposible.</p>
+                  <ul class="servicio-lista">
+                    <li>Pintura de patios y fachadas</li>
+                    <li>Malla contra caída de cascotes</li>
+                  </ul>
+                  <img class="servicio-foto" src="assets/img/srv-fachadas.webp" width="1000" height="750" loading="lazy" alt="Balcones de una fachada cubiertos con malla de protección azul">
+                </div>
+              </div>
+            </li>
 
-          <li class="servicio" id="azoteas">
-            <h3 class="servicio-nombre">Azoteas y aislamiento</h3>
-            <div class="servicio-cuerpo">
-              <p>Impermeabilizamos azoteas, cambiamos bidones y resolvemos la fontanería que va con ellos. En naves industriales, aislamiento térmico con poliuretano proyectado.</p>
-              <ul class="servicio-lista">
-                <li>Impermeabilización de azoteas</li>
-                <li>Cambio de bidones y fontanería</li>
-                <li>Poliuretano proyectado en naves</li>
-              </ul>
+            <li class="servicio" id="azoteas" data-servicio>
+              <h3 class="servicio-cabeza">
+                <button class="servicio-boton" type="button" aria-expanded="false" aria-controls="panel-azoteas">
+                  <span class="servicio-nombre">Azoteas y aislamiento</span>
+                  <span class="servicio-signo" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="servicio-panel" id="panel-azoteas">
+                <div class="servicio-cuerpo">
+                  <p>Impermeabilizamos azoteas, cambiamos bidones y resolvemos la fontanería que va con ellos. En naves industriales, aislamiento térmico con poliuretano proyectado.</p>
+                  <ul class="servicio-lista">
+                    <li>Impermeabilización de azoteas</li>
+                    <li>Cambio de bidones y fontanería</li>
+                    <li>Poliuretano proyectado en naves</li>
+                  </ul>
+                  <img class="servicio-foto" src="assets/img/srv-azoteas.webp" width="1000" height="750" loading="lazy" alt="Bidones de agua nuevos sobre una azotea recién impermeabilizada">
+                </div>
+              </div>
+            </li>
+          </ul>
+
+          <!-- Visor: en escritorio enseña la foto del servicio abierto -->
+          <div class="visor" aria-hidden="true" data-visor>
+            <div class="visor-marco">
+              <img class="es-activa" src="assets/img/srv-escayola.webp" width="1000" height="671" alt="" data-visor-foto="escayola">
+              <img src="assets/img/srv-pintura.webp" width="1000" height="667" alt="" loading="lazy" data-visor-foto="pintura">
+              <img src="assets/img/srv-reformas.webp" width="667" height="667" alt="" loading="lazy" data-visor-foto="reformas">
+              <img src="assets/img/srv-fachadas.webp" width="1000" height="750" alt="" loading="lazy" data-visor-foto="fachadas">
+              <img src="assets/img/srv-azoteas.webp" width="1000" height="750" alt="" loading="lazy" data-visor-foto="azoteas">
+              <span class="visor-llana"></span>
             </div>
-            <div class="servicio-imagen marco marco-fino">
-              <img src="assets/img/srv-azoteas.webp" width="1000" height="750" loading="lazy" alt="Bidones de agua nuevos sobre una azotea recién impermeabilizada">
-            </div>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -224,12 +279,14 @@
 
         <div class="obras">
           <figure class="obra obra-principal">
-            <img
-              src="assets/img/obra-WA0012-1600.webp"
-              srcset="assets/img/obra-WA0012-800.webp 800w, assets/img/obra-WA0012-1600.webp 1600w"
-              sizes="(min-width: 960px) 58vw, 92vw"
-              width="1600" height="900" loading="lazy"
-              alt="Azotea impermeabilizada en rojo con seis bidones de agua azules nuevos y la ciudad al fondo">
+            <div class="obra-foto" data-raspar>
+              <img
+                src="assets/img/obra-WA0012-1600.webp"
+                srcset="assets/img/obra-WA0012-800.webp 800w, assets/img/obra-WA0012-1600.webp 1600w"
+                sizes="(min-width: 960px) 60vw, 92vw"
+                width="1600" height="900" loading="lazy"
+                alt="Azotea impermeabilizada en rojo con seis bidones de agua azules nuevos y la ciudad al fondo">
+            </div>
             <figcaption>
               <strong>Azotea en Las Palmas de Gran Canaria</strong>
               Impermeabilización completa y sustitución de los bidones de agua.
@@ -237,12 +294,14 @@
           </figure>
 
           <figure class="obra">
-            <img
-              src="assets/img/obra-WA0002-800.webp"
-              srcset="assets/img/obra-WA0002-800.webp 800w, assets/img/obra-WA0002-1600.webp 1600w"
-              sizes="(min-width: 960px) 36vw, 92vw"
-              width="800" height="450" loading="lazy"
-              alt="Fachada de un edificio de viviendas cubierta con malla de protección azul">
+            <div class="obra-foto" data-raspar>
+              <img
+                src="assets/img/obra-WA0002-800.webp"
+                srcset="assets/img/obra-WA0002-800.webp 800w, assets/img/obra-WA0002-1600.webp 1600w"
+                sizes="(min-width: 960px) 32vw, 92vw"
+                width="800" height="450" loading="lazy"
+                alt="Fachada de un edificio de viviendas cubierta con malla de protección azul">
+            </div>
             <figcaption>
               <strong>Fachada residencial</strong>
               Malla de protección contra caída de cascotes, colocada con trabajos verticales.
@@ -250,12 +309,14 @@
           </figure>
 
           <figure class="obra">
-            <img
-              src="assets/img/obra-WA0022-800.webp"
-              srcset="assets/img/obra-WA0022-800.webp 800w, assets/img/obra-WA0022-1600.webp 1600w"
-              sizes="(min-width: 960px) 36vw, 92vw"
-              width="800" height="450" loading="lazy"
-              alt="La misma fachada vista desde la calle con la malla instalada en todas las plantas">
+            <div class="obra-foto" data-raspar>
+              <img
+                src="assets/img/obra-WA0022-800.webp"
+                srcset="assets/img/obra-WA0022-800.webp 800w, assets/img/obra-WA0022-1600.webp 1600w"
+                sizes="(min-width: 960px) 32vw, 92vw"
+                width="800" height="450" loading="lazy"
+                alt="La misma fachada vista desde la calle con la malla instalada en todas las plantas">
+            </div>
             <figcaption>
               <strong>La misma fachada, desde la calle</strong>
               La malla protege a vecinos y peatones mientras se repara el frente.
@@ -265,7 +326,7 @@
       </div>
     </section>
 
-    <!-- Proceso -->
+    <!-- Proceso: una línea de replanteo que se marca de punta a punta -->
     <section class="seccion" id="proceso" aria-labelledby="titulo-proceso">
       <div class="contenedor">
         <div class="seccion-cabeza">
@@ -276,7 +337,7 @@
           </p>
         </div>
 
-        <ol class="pasos">
+        <ol class="pasos" data-pasos>
           <li class="paso">
             <span class="paso-numero" aria-hidden="true">1</span>
             <h3 class="paso-titulo">Visita y medición</h3>
@@ -301,7 +362,7 @@
       </div>
     </section>
 
-    <!-- Opiniones -->
+    <!-- Opiniones: un panel en relieve sobre la pared -->
     <section class="seccion seccion-opiniones" id="opiniones" aria-labelledby="titulo-opiniones">
       <div class="contenedor">
         <h2 id="titulo-opiniones" class="titulo-seccion">Lo que dicen nuestros clientes</h2>
@@ -379,7 +440,7 @@
           <p class="formulario-estado" role="status" aria-live="polite" data-estado></p>
 
           <div class="formulario-acciones">
-            <button class="boton" type="submit" value="whatsapp">Enviar por WhatsApp</button>
+            <button class="boton boton-whatsapp" type="submit" value="whatsapp">Enviar por WhatsApp</button>
             <button class="boton boton-linea" type="submit" value="correo">Enviar por correo</button>
           </div>
           <p class="formulario-legal">
@@ -407,11 +468,11 @@
       <nav class="pie-columna" aria-label="Servicios">
         <h2>Servicios</h2>
         <ul>
-          <li><a href="#escayola">Escayola y pladur</a></li>
-          <li><a href="#pintura">Pintura</a></li>
-          <li><a href="#reformas">Reformas</a></li>
-          <li><a href="#fachadas">Fachadas y trabajos verticales</a></li>
-          <li><a href="#azoteas">Azoteas y aislamiento</a></li>
+          <li><a href="#escayola" data-abrir="escayola">Escayola y pladur</a></li>
+          <li><a href="#pintura" data-abrir="pintura">Pintura</a></li>
+          <li><a href="#reformas" data-abrir="reformas">Reformas</a></li>
+          <li><a href="#fachadas" data-abrir="fachadas">Fachadas y trabajos verticales</a></li>
+          <li><a href="#azoteas" data-abrir="azoteas">Azoteas y aislamiento</a></li>
         </ul>
       </nav>
 
@@ -441,8 +502,8 @@
     </div>
   </footer>
 
-  <!-- Acciones rápidas en móvil -->
-  <div class="barra-movil">
+  <!-- Acciones rápidas en móvil: aparecen al dejar atrás la portada -->
+  <div class="barra-movil" data-barra>
     <a class="boton" href="tel:+34660812651">Llamar</a>
     <a class="boton boton-whatsapp" href="https://wa.me/34660812651?text=Hola%2C%20quer%C3%ADa%20pedir%20presupuesto." target="_blank" rel="noopener">WhatsApp</a>
   </div>
