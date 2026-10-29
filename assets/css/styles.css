@@ -1,0 +1,1089 @@
+/* ==========================================================================
+   Escayolas y Pinturas Bolaños
+   Concepto: la página es una pared. Empieza en el techo con una cornisa
+   de escayola y termina en el suelo con un rodapié.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Archivo";
+  src: url("../fonts/archivo-latin-var.woff2") format("woff2");
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-display: swap;
+}
+
+:root {
+  /* Materiales */
+  --techo: #F5F5F2;        /* techo: un punto más claro que la pared */
+  --yeso: #ECEDE8;         /* pared de yeso, blanco mineral frío */
+  --cal: #F8F8F5;          /* superficies en relieve */
+  --sombra: #C7C9C1;       /* sombra de escayola, filetes y líneas */
+  --sombra-honda: #9FA298;
+
+  /* Azul Bolaños, sacado del logotipo */
+  --tinta: #20246E;
+  --tinta-viva: #2C3292;
+  --noche: #151950;        /* suelo / pie */
+  --texto: #393D69;
+  --texto-suave: #575A82;
+  --sobre-azul: #D5D7EA;
+  --sobre-azul-suave: #A9ACCD;
+
+  --anil: #4B5BF2;         /* solo para el foco del teclado */
+  --verde: #21675B;        /* verde del logotipo, para WhatsApp */
+  --error: #A3261C;
+
+  --margen: clamp(1.25rem, 4vw, 3.5rem);
+  --ancho: 1320px;
+  --cabecera: 5.5rem;
+  --curva: cubic-bezier(.62, .02, .22, 1);
+
+  --grano: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .13 0 0 0 0 .14 0 0 0 0 .43 0 0 0 .075 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  margin: 0;
+  font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--texto);
+  background-color: var(--yeso);
+  background-image: var(--grano);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@media (min-width: 1100px) {
+  body { font-size: 1.125rem; }
+}
+
+img { display: block; max-width: 100%; height: auto; }
+
+h1, h2, h3, p, ul, ol, dl, dd, figure, blockquote { margin: 0; }
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 3px solid var(--anil);
+  outline-offset: 3px;
+}
+
+section[id],
+li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
+
+.contenedor {
+  width: min(100% - 2 * var(--margen), var(--ancho));
+  margin-inline: auto;
+}
+
+.saltar {
+  position: absolute;
+  left: 1rem;
+  top: -10rem;
+  z-index: 100;
+  padding: .75rem 1.25rem;
+  background: var(--tinta);
+  color: var(--cal);
+  font-weight: 600;
+  text-decoration: none;
+}
+.saltar:focus { top: 1rem; }
+
+/* --------------------------------------------------------------------------
+   Botones
+   -------------------------------------------------------------------------- */
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  min-height: 3.5rem;
+  padding: .85rem 1.6rem;
+  border: 1px solid var(--tinta);
+  border-radius: 2px;
+  background: var(--tinta);
+  color: var(--cal);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  font-stretch: 108%;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+.boton:hover {
+  background: var(--tinta-viva);
+  border-color: var(--tinta-viva);
+}
+
+.boton-linea {
+  background: transparent;
+  color: var(--tinta);
+}
+.boton-linea:hover {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: var(--cal);
+}
+
+/* --------------------------------------------------------------------------
+   Cabecera: el techo
+   -------------------------------------------------------------------------- */
+
+.cabecera {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--techo);
+  transition: box-shadow .3s ease;
+}
+.cabecera.is-scrolled {
+  box-shadow: 0 1px 0 var(--sombra), 0 14px 30px -22px rgba(32, 36, 110, .45);
+}
+
+.cabecera-fila {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  height: var(--cabecera);
+}
+
+.marca { flex: none; }
+.marca img {
+  width: auto;
+  height: clamp(2.6rem, 2rem + 1.6vw, 3.4rem);
+}
+
+.nav { margin-left: auto; }
+.nav ul {
+  display: flex;
+  gap: clamp(1.25rem, 2.4vw, 2.25rem);
+  padding: 0;
+  list-style: none;
+}
+.nav a {
+  display: block;
+  padding-block: .5rem;
+  color: var(--tinta);
+  font-size: .9688rem;
+  font-weight: 500;
+  text-decoration: none;
+  text-underline-offset: .4em;
+  text-decoration-thickness: 1px;
+}
+.nav a:hover { text-decoration-line: underline; }
+
+.cabecera-tel {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .7rem 1.05rem;
+  border: 1px solid var(--tinta);
+  border-radius: 2px;
+  color: var(--tinta);
+  font-weight: 600;
+  font-stretch: 108%;
+  font-size: .9688rem;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color .2s ease, color .2s ease;
+}
+.cabecera-tel:hover {
+  background: var(--tinta);
+  color: var(--cal);
+}
+
+.menu-boton {
+  display: none;
+  min-height: 2.75rem;
+  padding: .5rem 1rem;
+  border: 1px solid var(--tinta);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--tinta);
+  font: inherit;
+  font-size: .9688rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 899px) {
+  :root { --cabecera: 4.5rem; }
+
+  .cabecera-fila { gap: 1rem; }
+  .cabecera-tel { margin-left: auto; }
+  .menu-boton { display: inline-flex; align-items: center; }
+
+  .nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: .5rem var(--margen) 1.5rem;
+    background: var(--techo);
+    box-shadow: 0 1px 0 var(--sombra), 0 24px 40px -24px rgba(32, 36, 110, .4);
+  }
+  .menu-abierto .nav { display: block; }
+  .nav ul {
+    flex-direction: column;
+    gap: 0;
+  }
+  .nav a {
+    padding-block: .9rem;
+    border-bottom: 1px solid var(--sombra);
+    font-size: 1.25rem;
+    font-stretch: 112%;
+  }
+}
+
+@media (max-width: 559px) {
+  .cabecera-tel { display: none; }
+  .menu-boton { margin-left: auto; }
+}
+
+/* --------------------------------------------------------------------------
+   Cornisa de escayola
+   Vista de frente, cada franja es una superficie del perfil:
+   faja, media caña, filete, dentículos, filete, cuarto bocel y junquillo.
+   Al cargar se "corre" de izquierda a derecha, como la terraja.
+   La última fila es la sombra que arroja sobre la pared.
+   -------------------------------------------------------------------------- */
+
+.cornisa {
+  --alto: clamp(4.25rem, 2.6rem + 6vw, 8.25rem);
+  --sombra-alto: 3.5rem;
+  --diente: clamp(.7rem, .45rem + .9vw, 1.3rem);
+  position: relative;
+  display: grid;
+  grid-template-rows: 9fr 33fr 4fr 22fr 4fr 25fr 8fr var(--sombra-alto);
+  height: calc(var(--alto) + var(--sombra-alto));
+  -webkit-mask-image: linear-gradient(90deg, #000 46%, transparent 56%);
+  mask-image: linear-gradient(90deg, #000 46%, transparent 56%);
+  -webkit-mask-size: 240% 100%;
+  mask-size: 240% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+  animation: correr 1.9s var(--curva) .25s both;
+}
+
+.cornisa > span { display: block; }
+
+/* Grano de yeso sobre el relieve */
+.cornisa::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 var(--sombra-alto);
+  background-image: var(--grano);
+  pointer-events: none;
+}
+
+.c-faja {
+  background: linear-gradient(#dfe0da, #ecece7 70%, #f1f1ed);
+  box-shadow: inset 0 1px 0 #d0d2ca;
+}
+
+.c-media-cana {
+  background: linear-gradient(
+    #b4b6ad 0%,
+    #c8cac2 14%,
+    #dcddd7 38%,
+    #eeeeea 66%,
+    #f9f9f6 100%
+  );
+}
+
+.c-filete {
+  background: linear-gradient(#fdfdfb, #f1f1ed);
+  box-shadow: inset 0 -1px 0 #c0c2b9;
+}
+
+.c-denticulos {
+  position: relative;
+  background: linear-gradient(#aeb0a7, #cbcdc5);
+}
+.c-denticulos::before,
+.c-denticulos::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+/* Cara de cada dentículo */
+.c-denticulos::before {
+  background: linear-gradient(#fbfbf9, #eeeeea 60%, #dddfd8);
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 var(--diente), transparent var(--diente) calc(var(--diente) * 1.6));
+  mask: repeating-linear-gradient(90deg, #000 0 var(--diente), transparent var(--diente) calc(var(--diente) * 1.6));
+}
+/* Arista en sombra de cada dentículo */
+.c-denticulos::after {
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 calc(var(--diente) - 2px),
+    rgba(32, 36, 110, .14) calc(var(--diente) - 2px) var(--diente),
+    transparent var(--diente) calc(var(--diente) * 1.6)
+  );
+}
+
+.c-cuarto-bocel {
+  background: linear-gradient(
+    #fdfdfb 0%,
+    #f6f6f3 30%,
+    #e2e3dd 68%,
+    #c9cbc3 100%
+  );
+}
+
+.c-junquillo {
+  background: linear-gradient(#e9eae5, #fbfbf9 35%, #d4d6ce 100%);
+  box-shadow: inset 0 -1px 0 #b7b9b0;
+}
+
+/* Sombra que la cornisa arroja sobre la pared */
+.c-sombra {
+  background: linear-gradient(
+    rgba(32, 36, 110, .17),
+    rgba(32, 36, 110, .06) 35%,
+    rgba(32, 36, 110, 0)
+  );
+  pointer-events: none;
+}
+
+/* Brillo de pasta fresca detrás de la terraja */
+.c-brillo {
+  position: absolute;
+  top: 0;
+  bottom: var(--sombra-alto);
+  left: -20vw;
+  width: 20vw;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .45) 70%, rgba(255, 255, 255, .9));
+  opacity: 0;
+  pointer-events: none;
+  animation:
+    brillo-mover 1.9s var(--curva) .25s both,
+    brillo-apagar .7s ease 1.95s forwards;
+}
+
+@keyframes correr {
+  from { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  to   { -webkit-mask-position: 0 0; mask-position: 0 0; }
+}
+
+/* El brillo acompaña al centro del borde difuminado de la máscara */
+@keyframes brillo-mover {
+  from { transform: translateX(-18vw); opacity: 1; }
+  to   { transform: translateX(122vw); opacity: 1; }
+}
+
+@keyframes brillo-apagar {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Inicio
+   -------------------------------------------------------------------------- */
+
+.inicio-rejilla {
+  display: grid;
+  gap: clamp(3rem, 6vw, 6rem);
+  padding-block: clamp(1rem, -1.5rem + 5vw, 3.5rem) clamp(1rem, 2vw, 2rem);
+}
+
+@media (min-width: 960px) {
+  .inicio-rejilla {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+  }
+}
+
+.inicio-titulo {
+  max-width: 12ch;
+  color: var(--tinta);
+  font-size: clamp(2.75rem, 1rem + 5.4vw, 6.4rem);
+  font-weight: 300;
+  font-stretch: 125%;
+  line-height: .98;
+  letter-spacing: -.03em;
+  text-wrap: balance;
+  animation: asentar 1s ease-out .95s both;
+}
+
+.inicio-entrada {
+  max-width: 34rem;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: clamp(1.125rem, 1rem + .35vw, 1.3125rem);
+  line-height: 1.55;
+  animation: asentar 1s ease-out 1.15s both;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+  animation: asentar 1s ease-out 1.3s both;
+}
+
+.inicio-nota {
+  margin-top: 1rem;
+  color: var(--texto-suave);
+  font-size: .9375rem;
+  animation: asentar 1s ease-out 1.3s both;
+}
+
+.inicio-imagen {
+  width: 100%;
+  max-width: 30rem;
+  animation: asentar 1.2s ease-out 1.1s both;
+}
+.inicio-imagen img { aspect-ratio: 4 / 5; }
+
+@media (min-width: 960px) {
+  .inicio-imagen { justify-self: end; }
+}
+
+@keyframes asentar {
+  from { opacity: 0; transform: translateY(.6rem); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Marco con moldura (cuarterón de escayola) para las fotos
+   -------------------------------------------------------------------------- */
+
+.marco {
+  padding: clamp(.6rem, .3rem + 1vw, 1rem);
+  border-radius: 2px;
+  background: linear-gradient(145deg, #fdfdfb 0%, #f2f2ee 55%, #dfe0da 100%);
+  box-shadow:
+    inset 1px 1px 0 #fff,
+    inset -1px -1px 0 #c3c5bc,
+    0 2px 4px -2px rgba(32, 36, 110, .14),
+    0 34px 60px -38px rgba(32, 36, 110, .5);
+}
+
+.marco-interior {
+  padding: 5px;
+  background: var(--yeso);
+  box-shadow: inset 1px 1px 0 #bcbeb5, inset -1px -1px 0 #fff;
+}
+
+.marco img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.marco-fino {
+  padding: 6px;
+}
+.marco-fino img {
+  box-shadow: 0 0 0 1px rgba(32, 36, 110, .12);
+}
+
+/* --------------------------------------------------------------------------
+   Secciones
+   -------------------------------------------------------------------------- */
+
+.seccion {
+  padding-block: clamp(5rem, 3rem + 7vw, 9rem);
+}
+
+.seccion-cabeza {
+  display: grid;
+  gap: 1.25rem 4rem;
+  margin-bottom: clamp(3rem, 2rem + 4vw, 5.5rem);
+}
+
+@media (min-width: 900px) {
+  .seccion-cabeza {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: end;
+  }
+}
+
+.titulo-seccion {
+  color: var(--tinta);
+  font-size: clamp(2.1rem, 1.2rem + 2.8vw, 3.75rem);
+  font-weight: 350;
+  font-stretch: 120%;
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+
+.seccion-intro {
+  max-width: 34rem;
+  color: var(--texto);
+}
+
+/* --------------------------------------------------------------------------
+   Servicios
+   -------------------------------------------------------------------------- */
+
+.servicios {
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--sombra);
+}
+
+.servicio {
+  display: grid;
+  gap: 1.5rem;
+  padding-block: clamp(2rem, 1.25rem + 2.5vw, 3.25rem);
+  border-top: 1px solid var(--sombra);
+}
+
+.servicio-nombre {
+  color: var(--tinta);
+  font-size: clamp(1.6rem, 1.15rem + 1.3vw, 2.4rem);
+  font-weight: 400;
+  font-stretch: 115%;
+  line-height: 1.08;
+  letter-spacing: -.015em;
+  text-wrap: balance;
+}
+
+.servicio-cuerpo p {
+  max-width: 34rem;
+}
+
+.servicio-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: .55rem 1.5rem;
+  margin-top: 1.4rem;
+  padding: 0;
+  list-style: none;
+  color: var(--texto-suave);
+  font-size: .9375rem;
+  line-height: 1.4;
+}
+.servicio-lista li {
+  position: relative;
+  padding-left: 1.2rem;
+}
+/* Un dentículo como viñeta */
+.servicio-lista li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .5em;
+  width: .4rem;
+  height: .4rem;
+  background: var(--sombra-honda);
+}
+
+.servicio-imagen {
+  order: -1;
+  max-width: 34rem;
+}
+.servicio-imagen img { aspect-ratio: 4 / 3; }
+
+@media (min-width: 960px) {
+  .servicio {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 5fr) minmax(0, 3.6fr);
+    gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: start;
+  }
+  .servicio-imagen {
+    order: 0;
+    max-width: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Obra reciente: una pared pintada en el azul de la casa
+   -------------------------------------------------------------------------- */
+
+.seccion-azul {
+  background: var(--tinta);
+  color: var(--sobre-azul);
+}
+.seccion-azul .titulo-seccion { color: var(--cal); }
+.seccion-azul .seccion-intro { color: var(--sobre-azul); }
+
+.obras {
+  display: grid;
+  gap: clamp(2rem, 1.5rem + 2vw, 2.75rem) clamp(1.25rem, 2.5vw, 2.25rem);
+}
+
+@media (min-width: 960px) {
+  .obras {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+  .obra-principal { grid-row: span 2; }
+}
+
+.obra {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.obra img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+@media (min-width: 960px) {
+  .obra-principal img {
+    flex: 1 1 auto;
+    height: 0;
+    min-height: 22rem;
+    aspect-ratio: auto;
+    object-position: 62% 50%;
+  }
+}
+
+.obra figcaption {
+  max-width: 36rem;
+  color: var(--sobre-azul-suave);
+  font-size: .9375rem;
+  line-height: 1.5;
+}
+.obra figcaption strong {
+  display: block;
+  margin-bottom: .15rem;
+  color: var(--cal);
+  font-weight: 600;
+  font-stretch: 108%;
+}
+
+/* --------------------------------------------------------------------------
+   Cómo trabajamos
+   -------------------------------------------------------------------------- */
+
+.pasos {
+  display: grid;
+  gap: 2.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .pasos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  .pasos {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+}
+
+.paso {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--tinta);
+}
+
+.paso-numero {
+  display: block;
+  margin-bottom: clamp(1.25rem, 3vw, 2.5rem);
+  color: var(--tinta);
+  font-size: clamp(3.25rem, 2.4rem + 2.4vw, 5rem);
+  font-weight: 200;
+  font-stretch: 125%;
+  line-height: .9;
+}
+
+.paso-titulo {
+  margin-bottom: .5rem;
+  color: var(--tinta);
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-stretch: 110%;
+  line-height: 1.25;
+}
+
+.paso p {
+  max-width: 24rem;
+}
+
+/* --------------------------------------------------------------------------
+   Opiniones: un panel en relieve sobre la pared
+   -------------------------------------------------------------------------- */
+
+.seccion-opiniones {
+  background: var(--cal);
+  box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 var(--sombra);
+}
+
+.opiniones {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+}
+
+@media (min-width: 960px) {
+  .opiniones {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    gap: 2.5rem clamp(3rem, 7vw, 7rem);
+  }
+  .opinion-grande { grid-row: span 2; }
+}
+
+.opinion p {
+  max-width: 36rem;
+  color: var(--texto);
+  line-height: 1.55;
+}
+
+.opinion:not(.opinion-grande) {
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--sombra);
+}
+
+.opinion-grande p {
+  max-width: 22em;
+  color: var(--tinta);
+  font-size: clamp(1.6rem, 1.05rem + 1.7vw, 2.6rem);
+  font-weight: 300;
+  font-stretch: 112%;
+  line-height: 1.22;
+  letter-spacing: -.015em;
+  text-indent: -.5em;
+  text-wrap: pretty;
+}
+
+/* --------------------------------------------------------------------------
+   Contacto
+   -------------------------------------------------------------------------- */
+
+.contacto-rejilla {
+  display: grid;
+  gap: clamp(3rem, 6vw, 7rem);
+}
+
+@media (min-width: 1024px) {
+  .contacto-rejilla {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+  }
+}
+
+.contacto-datos .seccion-intro {
+  margin-top: 1.5rem;
+}
+
+.datos {
+  display: grid;
+  gap: 1.75rem;
+  margin-top: clamp(2.25rem, 4vw, 3.25rem);
+}
+
+.datos dt {
+  margin-bottom: .25rem;
+  color: var(--texto-suave);
+  font-size: .9375rem;
+}
+
+.datos a {
+  color: var(--tinta);
+  text-decoration-thickness: 1px;
+  text-underline-offset: .22em;
+}
+
+.dato-grande {
+  display: inline-block;
+  font-size: clamp(1.9rem, 1.2rem + 2vw, 2.9rem);
+  font-weight: 350;
+  font-stretch: 122%;
+  letter-spacing: -.015em;
+  line-height: 1.1;
+  text-decoration: none;
+}
+.datos .dato-grande { text-decoration-line: none; }
+.datos .dato-grande:hover { text-decoration-line: underline; }
+
+.formulario {
+  display: grid;
+  gap: 1.5rem;
+  padding: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+  border-radius: 2px;
+  background: var(--cal);
+  box-shadow:
+    inset 1px 1px 0 #fff,
+    inset -1px -1px 0 var(--sombra),
+    0 40px 80px -56px rgba(32, 36, 110, .55);
+}
+
+@media (min-width: 640px) {
+  .formulario { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .campo-ancho,
+  .formulario-estado,
+  .formulario-acciones,
+  .formulario-legal { grid-column: 1 / -1; }
+}
+
+.campo {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.campo label,
+.campo legend {
+  display: block;
+  margin-bottom: .5rem;
+  padding: 0;
+  color: var(--tinta);
+  font-size: .9688rem;
+  font-weight: 600;
+  font-stretch: 105%;
+}
+
+.opcional {
+  color: var(--texto-suave);
+  font-weight: 400;
+}
+
+.campo input,
+.campo textarea {
+  width: 100%;
+  min-height: 3.4rem;
+  padding: .85rem 1rem;
+  border: 1px solid var(--sombra);
+  border-radius: 2px;
+  background: #fff;
+  color: var(--tinta);
+  font: inherit;
+  font-size: 1rem;
+  transition: border-color .15s ease;
+}
+.campo textarea {
+  resize: vertical;
+  min-height: 7.5rem;
+}
+.campo input::placeholder,
+.campo textarea::placeholder { color: #6B6E8F; }
+
+.campo input:hover,
+.campo textarea:hover { border-color: var(--sombra-honda); }
+
+.campo input:focus-visible,
+.campo textarea:focus-visible {
+  border-color: var(--tinta);
+  outline-offset: 1px;
+}
+
+.campo [aria-invalid="true"] {
+  border-color: var(--error);
+  box-shadow: inset 3px 0 0 var(--error);
+}
+
+.opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.opcion {
+  position: relative;
+}
+.opcion input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.campo .opcion { margin: 0; font-weight: 400; }
+.opcion span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: .55rem 1rem;
+  border: 1px solid var(--sombra);
+  border-radius: 2px;
+  background: var(--yeso);
+  color: var(--tinta);
+  font-size: .9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.opcion span:hover { border-color: var(--tinta); }
+.opcion input:checked + span {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: var(--cal);
+}
+.opcion input:focus-visible + span {
+  outline: 3px solid var(--anil);
+  outline-offset: 2px;
+}
+
+.formulario-estado {
+  color: var(--tinta);
+  font-size: .9688rem;
+  font-weight: 500;
+}
+.formulario-estado:empty { display: none; }
+.formulario-estado.es-error { color: var(--error); }
+
+.formulario-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.formulario-legal {
+  color: var(--texto-suave);
+  font-size: .8438rem;
+}
+.formulario-legal a { color: var(--tinta); }
+
+/* --------------------------------------------------------------------------
+   Rodapié y pie: el suelo
+   -------------------------------------------------------------------------- */
+
+.rodapie {
+  display: grid;
+  grid-template-rows: .8rem clamp(2.5rem, 2rem + 2vw, 3.75rem);
+}
+.rodapie > span { display: block; }
+
+.r-bocel {
+  background: linear-gradient(#e6e7e1, #fdfdfb 35%, #d8d9d2 100%);
+  box-shadow: inset 0 1px 0 #cfd1c9;
+}
+
+.r-tabla {
+  background: linear-gradient(#fafaf8, #efefeb 70%, #d9dad3);
+  box-shadow: inset 0 1px 0 #c3c5bc, inset 0 -2px 0 #a9aba2;
+}
+
+.pie {
+  padding-block: clamp(3.5rem, 2.5rem + 3vw, 5rem) 2rem;
+  background: var(--noche);
+  color: var(--sobre-azul-suave);
+  font-size: .9688rem;
+}
+
+.pie-rejilla {
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 720px) {
+  .pie-rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1100px) {
+  .pie-rejilla { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, .8fr); }
+}
+
+.pie-marca img {
+  width: 12rem;
+  height: auto;
+  margin-bottom: 1.25rem;
+}
+.pie-marca p { max-width: 22rem; }
+
+.pie-columna h2 {
+  margin-bottom: 1rem;
+  color: var(--cal);
+  font-size: .9688rem;
+  font-weight: 600;
+  font-stretch: 108%;
+}
+
+.pie ul {
+  display: grid;
+  gap: .55rem;
+  padding: 0;
+  list-style: none;
+}
+
+.pie a {
+  color: var(--sobre-azul);
+  text-decoration: none;
+  text-underline-offset: .22em;
+}
+.pie a:hover { text-decoration-line: underline; }
+
+.pie-final {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .5rem 2rem;
+  margin-top: clamp(3rem, 5vw, 4.5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(213, 215, 234, .16);
+  font-size: .875rem;
+}
+
+/* --------------------------------------------------------------------------
+   Barra de acciones en móvil
+   -------------------------------------------------------------------------- */
+
+.barra-movil { display: none; }
+
+@media (max-width: 719px) {
+  body { padding-bottom: 4.75rem; }
+
+  .barra-movil {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .5rem;
+    padding: .6rem var(--margen) calc(.6rem + env(safe-area-inset-bottom));
+    background: rgba(245, 245, 242, .94);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -1px 0 var(--sombra);
+  }
+  .barra-movil .boton { min-height: 3.25rem; }
+
+  .boton-whatsapp {
+    background: var(--verde);
+    border-color: var(--verde);
+  }
+  .boton-whatsapp:hover {
+    background: #1a5449;
+    border-color: #1a5449;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Movimiento reducido: la cornisa aparece ya corrida
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .cornisa,
+  .inicio-titulo,
+  .inicio-entrada,
+  .acciones,
+  .inicio-nota,
+  .inicio-imagen { animation: none; }
+  .c-brillo { display: none; }
+}
