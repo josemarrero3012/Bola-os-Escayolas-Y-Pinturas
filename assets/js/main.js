@@ -3,10 +3,10 @@
   const CORREO = "info@tutistar.com";
   const quieto = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  // Cabecera: sombra al despegarse del techo; se esconde al bajar y vuelve al subir
+  // Cabecera: transparente sobre la portada, con sombra después; se esconde al bajar y vuelve al subir
   const cabecera = document.querySelector("[data-cabecera]");
   const barra = document.querySelector("[data-barra]");
-  const inicio = document.querySelector("[data-inicio]");
+  const portada = document.querySelector("[data-portada]");
   let ultimoScroll = window.scrollY;
 
   const alDesplazar = () => {
@@ -15,7 +15,9 @@
     if (!cabecera.classList.contains("menu-abierto")) {
       cabecera.classList.toggle("is-oculta", y > ultimoScroll && y > 320);
     }
-    if (barra) barra.classList.toggle("visible", y > inicio.offsetHeight * .6);
+    const finPortada = portada.offsetTop + portada.offsetHeight - cabecera.offsetHeight;
+    cabecera.classList.toggle("sobre-portada", y < finPortada);
+    if (barra) barra.classList.toggle("visible", y > window.innerHeight * .6);
     ultimoScroll = y;
   };
   alDesplazar();
@@ -52,62 +54,43 @@
     }
   });
 
-  // Luz rasante: la textura de llana solo se ve donde da la luz.
-  // Al cargar, la luz viaja con la terraja; después sigue al puntero con algo de inercia.
-  if (inicio && !quieto.matches) {
-    const pos = { x: .3, y: .42 };
-    const meta = { x: .3, y: .42 };
-    let animando = false;
-
-    const pintar = () => {
-      inicio.style.setProperty("--lx", `${(pos.x * 100).toFixed(2)}%`);
-      inicio.style.setProperty("--ly", `${(pos.y * 100).toFixed(2)}%`);
+  // Portada: avance del desplazamiento (para el texto) y rosetón en 3D en pantallas grandes
+  if (portada) {
+    const marcarAvance = () => {
+      const r = portada.getBoundingClientRect();
+      const recorrido = Math.max(1, r.height - window.innerHeight);
+      portada.style.setProperty("--p", Math.min(1, Math.max(0, -r.top / recorrido)).toFixed(3));
     };
+    marcarAvance();
+    window.addEventListener("scroll", marcarAvance, { passive: true });
 
-    const seguir = () => {
-      pos.x += (meta.x - pos.x) * .07;
-      pos.y += (meta.y - pos.y) * .07;
-      pintar();
-      if (Math.abs(meta.x - pos.x) > .0005 || Math.abs(meta.y - pos.y) > .0005) {
-        requestAnimationFrame(seguir);
-      } else {
-        animando = false;
+    const grande = window.matchMedia("(min-width: 960px)").matches;
+    const lienzo = portada.querySelector("[data-lienzo]");
+    const webgl = (() => {
+      try {
+        return !!document.createElement("canvas").getContext("webgl2");
+      } catch {
+        return false;
       }
-    };
+    })();
 
-    const apuntar = (x, y) => {
-      meta.x = x;
-      meta.y = y;
-      if (!animando) {
-        animando = true;
-        requestAnimationFrame(seguir);
-      }
-    };
-
-    // Entrada: de fuera por la izquierda hasta su sitio, al ritmo de la cornisa
-    const t0 = performance.now();
-    const DURACION = 2100;
-    const curva = (t) => 1 - Math.pow(1 - t, 3);
-    let entrando = true;
-    const entrar = (ahora) => {
-      const t = Math.min(1, (ahora - t0 - 200) / DURACION);
-      if (t > 0) {
-        pos.x = meta.x = -.15 + (.3 + .15) * curva(t);
-        pos.y = meta.y = .2 + (.42 - .2) * curva(t);
-        pintar();
-      }
-      if (t < 1 && entrando) requestAnimationFrame(entrar);
-      else entrando = false;
-    };
-    requestAnimationFrame(entrar);
-
-    const fino = window.matchMedia("(pointer: fine)");
-    inicio.addEventListener("pointermove", (e) => {
-      if (!fino.matches) return;
-      entrando = false;
-      const r = inicio.getBoundingClientRect();
-      apuntar((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
-    });
+    if (grande && webgl && !quieto.matches && lienzo) {
+      portada.classList.add("con-3d");
+      portada.addEventListener("pointermove", () => portada.classList.add("luz-usada"), { once: true });
+      import("./portada-3d.js")
+        .then(({ iniciar }) =>
+          iniciar({
+            lienzo,
+            escenario: portada,
+            modelo: "assets/3d/roseton.glb",
+            alListo: () => portada.classList.add("en-3d"),
+          })
+        )
+        .catch(() => {
+          // Sin 3D se queda el render de Cycles, sin el recorrido de cámara
+          portada.classList.remove("con-3d");
+        });
+    }
   }
 
   // Servicios: un panel abierto cada vez; en escritorio el visor cambia de foto

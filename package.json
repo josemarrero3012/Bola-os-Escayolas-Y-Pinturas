@@ -10,6 +10,11 @@
     "check": "node scripts/check.mjs",
     "build": "node scripts/build.mjs",
     "check:dist": "node scripts/check.mjs dist",
-    "preview": "python3 -m http.server 8765 --directory dist"
+    "preview": "python3 -m http.server 8765 --directory dist",
+    "dev": "npm run build && npm run preview"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "three": "0.186.1"
   }
 }

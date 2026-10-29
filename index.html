@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Escayolas y Pinturas Bolaños | Escayola, pladur y pintura en Las Palmas de Gran Canaria</title>
   <meta name="description" content="Techos de escayola, pladur, pintura, reformas, fachadas y azoteas en Las Palmas de Gran Canaria. Visita y presupuesto sin compromiso. Llama al 660 81 26 51.">
-  <meta name="theme-color" content="#F6F6F3">
+  <meta name="theme-color" content="#0E1138">
   <link rel="icon" href="assets/img/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/archivo-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/img/estuco.webp" as="image" type="image/webp">
+  <link rel="preload" href="assets/img/roseton-escritorio.webp" as="image" type="image/webp" media="(min-width: 720px)">
+  <link rel="preload" href="assets/img/roseton-movil.webp" as="image" type="image/webp" media="(max-width: 719px)">
   <link rel="stylesheet" href="assets/css/styles.css">
   <script>document.documentElement.classList.add("js");</script>
 
@@ -49,10 +50,11 @@
 <body>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
 
-  <header class="cabecera" data-cabecera>
+  <header class="cabecera sobre-portada" data-cabecera>
     <div class="contenedor cabecera-fila">
       <a class="marca" href="#" aria-label="Escayolas y Pinturas Bolaños, ir al inicio">
-        <img src="assets/img/logo.png" width="571" height="161" alt="Bolaños Escayolas y Pinturas">
+        <img class="marca-oscura" src="assets/img/logo.png" width="571" height="161" alt="Bolaños Escayolas y Pinturas">
+        <img class="marca-clara" src="assets/img/logo-light.png" width="571" height="161" alt="" aria-hidden="true">
       </a>
 
       <nav class="nav" id="nav" aria-label="Principal">
@@ -79,87 +81,67 @@
 
   <main id="contenido">
 
-    <!-- Inicio: el techo, la cornisa y una pared de estuco bajo luz rasante -->
-    <section class="inicio" aria-labelledby="titulo-inicio" data-inicio>
-      <div class="cornisa" aria-hidden="true">
-        <span class="c-faja"></span>
-        <span class="c-media-cana"></span>
-        <span class="c-filete"></span>
-        <span class="c-denticulos"></span>
-        <span class="c-filete c-filete-bajo"></span>
-        <span class="c-cuarto-bocel"></span>
-        <span class="c-junquillo"></span>
-        <span class="c-sombra"></span>
-        <span class="c-brillo"></span>
-      </div>
+    <!-- Portada: un rosetón de escayola modelado en Blender, en un techo pintado en el azul de la casa.
+         En escritorio es 3D en tiempo real (luz rasante que sigue al puntero);
+         mientras carga, en móvil o sin WebGL se ve su render de Cycles. -->
+    <section class="portada" aria-labelledby="titulo-inicio" data-portada>
+      <div class="portada-escena">
+        <picture class="portada-poster">
+          <source media="(max-width: 719px)" srcset="assets/img/roseton-movil.webp" width="900" height="1400">
+          <img src="assets/img/roseton-escritorio.webp" width="1920" height="1080" alt="" fetchpriority="high">
+        </picture>
+        <canvas class="portada-lienzo" aria-hidden="true" data-lienzo></canvas>
 
-      <div class="luz" aria-hidden="true">
-        <div class="luz-relieve"></div>
-        <div class="luz-foco"></div>
-      </div>
+        <div class="contenedor portada-contenido">
+          <h1 id="titulo-inicio" class="inicio-titulo">
+            <span class="linea">El acabado</span>
+            <span class="linea">se nota en</span>
+            <span class="linea">el techo.</span>
+          </h1>
 
-      <div class="contenedor inicio-rejilla">
-        <h1 id="titulo-inicio" class="inicio-titulo">
-          <span class="linea">El acabado</span>
-          <span class="linea">se nota en</span>
-          <span class="linea">el techo.</span>
-        </h1>
-
-        <div class="inicio-texto">
-          <p class="inicio-entrada">
-            Escayola, pladur, pintura y reformas en Las Palmas de Gran Canaria.
-            Techos, paredes, fachadas y azoteas para viviendas, comunidades,
-            locales y empresas.
-          </p>
-          <div class="acciones">
-            <a class="boton" href="#contacto">Pedir presupuesto</a>
-            <a class="boton boton-linea" href="tel:+34660812651">Llamar al 660 81 26 51</a>
-          </div>
-          <p class="inicio-nota">Visita y presupuesto sin compromiso.</p>
-        </div>
-
-        <div class="inicio-imagen">
-          <div class="marco">
-            <div class="marco-interior">
-              <img
-                src="assets/img/hero-techo-1100.webp"
-                srcset="assets/img/hero-techo-640.webp 640w, assets/img/hero-techo-1100.webp 1100w"
-                sizes="(min-width: 960px) 30vw, 80vw"
-                width="1100" height="1372"
-                alt="Escayolista rematando con espátula una moldura en un techo"
-                fetchpriority="high">
+          <div class="inicio-texto">
+            <p class="inicio-entrada">
+              Escayola, pladur, pintura y reformas en Las Palmas de Gran Canaria.
+              Techos, paredes, fachadas y azoteas para viviendas, comunidades,
+              locales y empresas.
+            </p>
+            <div class="acciones">
+              <a class="boton boton-claro" href="#contacto">Pedir presupuesto</a>
+              <a class="boton boton-linea-clara" href="tel:+34660812651">Llamar al 660 81 26 51</a>
             </div>
+            <p class="inicio-nota">Visita y presupuesto sin compromiso.</p>
+            <p class="portada-pista" aria-hidden="true">Mueve el ratón: la luz rasante descubre el relieve</p>
           </div>
-        </div>
 
-        <!-- Lo esencial de la casa, al pie de la pared como un rodapié -->
-        <ul class="oficios" aria-label="Lo que nos define">
-          <li class="oficio">
-            <svg class="oficio-icono" viewBox="0 0 32 32" aria-hidden="true">
-              <rect x="4" y="5" width="19" height="7" rx="1" pathLength="1"/>
-              <path d="M23 8.5h4v7H15.5v3.5" pathLength="1"/>
-              <rect x="13.5" y="19" width="4" height="9" rx="1" pathLength="1"/>
-            </svg>
-            <strong class="oficio-nombre">Pintura</strong>
-            <p>Pisos, chalés, empresas, locales y oficinas, por dentro y por fuera.</p>
-          </li>
-          <li class="oficio">
-            <svg class="oficio-icono" viewBox="0 0 32 32" aria-hidden="true">
-              <rect x="4" y="6" width="24" height="20" pathLength="1"/>
-              <path d="M4 12.67h24M4 19.33h24M12 6v6.67M20 6v6.67M8 12.67v6.66M16 12.67v6.66M24 12.67v6.66M12 19.33V26M20 19.33V26" pathLength="1"/>
-            </svg>
-            <strong class="oficio-nombre">Materiales</strong>
-            <p>Usamos los mejores materiales de construcción en cada trabajo.</p>
-          </li>
-          <li class="oficio">
-            <svg class="oficio-icono" viewBox="0 0 32 32" aria-hidden="true">
-              <path d="M4 5h24v4c-4 0-4 4.5-8 4.5v4c-4 0-4 4.5-8 4.5V27H4Z" pathLength="1"/>
-              <path d="M8 27V9.5" pathLength="1"/>
-            </svg>
-            <strong class="oficio-nombre">Escayolas</strong>
-            <p>Escayola y refilos en obra nueva y en reformas de viviendas.</p>
-          </li>
-        </ul>
+          <!-- Lo esencial de la casa, al pie de la pared como un rodapié -->
+          <ul class="oficios" aria-label="Lo que nos define">
+            <li class="oficio">
+              <svg class="oficio-icono" viewBox="0 0 32 32" aria-hidden="true">
+                <rect x="4" y="5" width="19" height="7" rx="1" pathLength="1"/>
+                <path d="M23 8.5h4v7H15.5v3.5" pathLength="1"/>
+                <rect x="13.5" y="19" width="4" height="9" rx="1" pathLength="1"/>
+              </svg>
+              <strong class="oficio-nombre">Pintura</strong>
+              <p>Pisos, chalés, empresas, locales y oficinas, por dentro y por fuera.</p>
+            </li>
+            <li class="oficio">
+              <svg class="oficio-icono" viewBox="0 0 32 32" aria-hidden="true">
+                <rect x="4" y="6" width="24" height="20" pathLength="1"/>
+                <path d="M4 12.67h24M4 19.33h24M12 6v6.67M20 6v6.67M8 12.67v6.66M16 12.67v6.66M24 12.67v6.66M12 19.33V26M20 19.33V26" pathLength="1"/>
+              </svg>
+              <strong class="oficio-nombre">Materiales</strong>
+              <p>Usamos los mejores materiales de construcción en cada trabajo.</p>
+            </li>
+            <li class="oficio">
+              <svg class="oficio-icono" viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M4 5h24v4c-4 0-4 4.5-8 4.5v4c-4 0-4 4.5-8 4.5V27H4Z" pathLength="1"/>
+                <path d="M8 27V9.5" pathLength="1"/>
+              </svg>
+              <strong class="oficio-nombre">Escayolas</strong>
+              <p>Escayola y refilos en obra nueva y en reformas de viviendas.</p>
+            </li>
+          </ul>
+        </div>
       </div>
     </section>
 
