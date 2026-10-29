@@ -166,7 +166,8 @@
 
   // Entradas en pantalla: fotos de obra que se rascan y línea de proceso que se marca
   const alVer = (elementos, accion, margen = "0px 0px -18% 0px") => {
-    if (!("IntersectionObserver" in window)) return elementos.forEach(accion);
+    // Sin movimiento no hay nada que esperar: todo queda ya hecho
+    if (quieto.matches || !("IntersectionObserver" in window)) return elementos.forEach(accion);
     const io = new IntersectionObserver((entradas) => {
       entradas.forEach((entrada) => {
         if (!entrada.isIntersecting) return;
