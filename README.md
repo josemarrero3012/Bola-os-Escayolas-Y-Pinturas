@@ -36,15 +36,16 @@ Abrir `index.html` sin compilar funciona, pero la portada se queda con el render
 La pieza se modela fuera del repositorio, en la carpeta `bolanos-3d` de José Manuel (Blender 5.2, con sus scripts de construcción, validación y render). A la web llegan tres cosas:
 
 - `assets/3d/arquitectura.glb`: su `exports/bolanos_architecture.glb` con las texturas en WebP y la geometría comprimida con meshopt (de 6,1 MB a 1,1 MB). Solo se carga en escritorio.
-- `src/portada-estados.json`: los cuatro estados de `animation/transforms.json` (posición, giro Euler XYZ en radianes y escala de cada pieza, locales a `Hero_Architecture`).
-- `assets/img/arquitectura-escritorio.webp` y `arquitectura-movil.webp`: su `renders/hero_transparent.png` reducido.
+- `src/portada-estados.json`: los estados de `animation/transforms.json` (posición, giro Euler XYZ en radianes y escala de cada pieza, locales a `Hero_Architecture`). La web usa los tres de apertura; la salida es una dispersión en abanico hacia los bordes de la pantalla, calculada en `src/portada-3d.js`.
+- `assets/img/arquitectura-escritorio.webp` y `arquitectura-movil.webp`: el render transparente de `blender/portada-luz.py`, reducido a 1200×1350 y 800×900. El script abre su `.blend`, le pone la luz de estudio de la web (softbox cálido, relleno frío muy bajo, tiras de contraluz y veladura satinada en la escayola) y renderiza con la cámara de tres cuartos.
 
 ```bash
 npx @gltf-transform/cli webp bolanos_architecture.glb tmp.glb --quality 90
 npx @gltf-transform/cli meshopt tmp.glb assets/3d/arquitectura.glb
+python blender/portada-luz.py bolanos-3d/blender/bolanos_architecture.blend portada.png   # 1600×1800, 128 muestras
 ```
 
-Si cambia la cámara `Camera_Three_Quarter` del `.blend`, hay que copiar su posición, dirección y `ortho_scale` a las constantes del principio de `src/portada-3d.js` para que el 3D siga encajando con el render.
+Si cambia la cámara `Camera_Three_Quarter` del `.blend`, hay que copiar su posición, dirección y `ortho_scale` a las constantes del principio de `src/portada-3d.js` para que el 3D siga encajando con el render. Lo mismo con las luces: `LUCES` en `src/portada-3d.js` repite las de `blender/portada-luz.py` en ejes glTF.
 
 ## Las maquetas de «Cómo trabajamos»
 
