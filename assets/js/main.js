@@ -2,6 +2,13 @@
   const TELEFONO = "34660812651";
   const CORREO = "info@tutistar.com";
   const quieto = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const webgl = () => {
+    try {
+      return !!document.createElement("canvas").getContext("webgl2");
+    } catch {
+      return false;
+    }
+  };
 
   // Cabecera: transparente sobre la portada, con sombra después; se esconde al bajar y vuelve al subir
   const cabecera = document.querySelector("[data-cabecera]");
@@ -66,15 +73,7 @@
 
     const grande = window.matchMedia("(min-width: 960px)").matches;
     const lienzo = portada.querySelector("[data-lienzo]");
-    const webgl = (() => {
-      try {
-        return !!document.createElement("canvas").getContext("webgl2");
-      } catch {
-        return false;
-      }
-    })();
-
-    if (grande && webgl && !quieto.matches && lienzo) {
+    if (grande && webgl() && !quieto.matches && lienzo) {
       portada.classList.add("con-3d");
       portada.addEventListener("pointermove", () => portada.classList.add("luz-usada"), { once: true });
       import("./portada-3d.js")
@@ -164,7 +163,75 @@
   const raspables = [...document.querySelectorAll("[data-raspar]")];
   raspables.forEach((el, i) => el.style.setProperty("--retraso", `${i * 0.18}s`));
   alVer(raspables, (el) => el.classList.add("raspada"));
-  alVer([...document.querySelectorAll("[data-pasos]")], (el) => el.classList.add("marcados"), "0px 0px -25% 0px");
+
+  // Cómo trabajamos: la línea se marca según bajas, el paso que cruza el centro
+  // de la pantalla es el activo y el visor de escritorio enseña su pieza en 3D
+  const proceso = document.querySelector("[data-proceso]");
+  if (proceso) {
+    const lista = proceso.querySelector("[data-pasos]");
+    const pasos = [...lista.querySelectorAll("[data-paso]")];
+    const visor = proceso.querySelector("[data-visor-paso]");
+    const cuenta = proceso.querySelector("[data-visor-cuenta]");
+    const tituloVisor = proceso.querySelector("[data-visor-titulo]");
+    let piezas = null;
+    let activo = 0;
+
+    const activar = (n) => {
+      if (n === activo) return;
+      activo = n;
+      pasos.forEach((paso, i) => {
+        paso.classList.toggle("activo", i + 1 === n);
+        paso.classList.toggle("hecho", i + 1 < n);
+      });
+      if (!visor) return;
+      visor.dataset.activo = n;
+      cuenta.textContent = String(n).padStart(2, "0");
+      tituloVisor.textContent = pasos[n - 1].querySelector(".paso-titulo").textContent;
+      piezas?.mostrar(n);
+    };
+
+    const seguir = () => {
+      const centro = window.innerHeight / 2;
+      const r = lista.getBoundingClientRect();
+      lista.style.setProperty("--avance", Math.min(1, Math.max(0, (centro - r.top) / r.height)).toFixed(3));
+      let n = 1;
+      pasos.forEach((paso, i) => {
+        if (paso.getBoundingClientRect().top < centro) n = i + 1;
+      });
+      activar(n);
+    };
+    seguir();
+    window.addEventListener("scroll", seguir, { passive: true });
+    window.addEventListener("resize", seguir);
+
+    const lienzo = visor?.querySelector("[data-lienzo-paso]");
+    const grande = window.matchMedia("(min-width: 960px)").matches;
+    if (lienzo && grande && webgl() && !quieto.matches) {
+      const modelos = Object.fromEntries(
+        pasos.filter((paso) => paso.dataset.modelo).map((paso) => [paso.dataset.paso, paso.dataset.modelo])
+      );
+      // Se carga al acercarse a la sección, no al abrir la página
+      const io = new IntersectionObserver(([entrada]) => {
+        if (!entrada.isIntersecting) return;
+        io.disconnect();
+        import("./pasos-3d.js")
+          .then(({ iniciar }) =>
+            iniciar({
+              lienzo,
+              escenario: visor,
+              modelos,
+              alCambiar: (conPieza) => visor.classList.toggle("con-pieza", conPieza),
+            })
+          )
+          .then((p) => {
+            piezas = p;
+            piezas.mostrar(activo);
+          })
+          .catch(() => visor.classList.remove("con-pieza"));
+      }, { rootMargin: "600px 0px" });
+      io.observe(proceso);
+    }
+  }
 
   // Formulario: prepara el mensaje y lo abre en WhatsApp o en el correo
   const formulario = document.querySelector("[data-formulario]");

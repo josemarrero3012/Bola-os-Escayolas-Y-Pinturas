@@ -59,8 +59,8 @@
       <nav class="nav" id="nav" aria-label="Principal">
         <ul>
           <li><a href="#servicios">Servicios</a></li>
-          <li><a href="#obras">Obras</a></li>
           <li><a href="#proceso">Cómo trabajamos</a></li>
+          <li><a href="#obras">Obras</a></li>
           <li><a href="#contacto">Contacto</a></li>
         </ul>
         <a class="nav-tel" href="tel:+34660812651">Llamar al 660 81 26 51</a>
@@ -276,8 +276,75 @@
       </div>
     </section>
 
-    <!-- Obra real: un paño de cal en relieve -->
-    <section class="seccion seccion-obras" id="obras" aria-labelledby="titulo-obras">
+    <!-- Cómo trabajamos: cuatro pasos en vertical. En escritorio, un visor fijo enseña
+         la pieza 3D del paso en el que estás; en móvil, cada paso lleva su render. -->
+    <section class="seccion seccion-proceso" id="proceso" aria-labelledby="titulo-proceso" data-proceso>
+      <div class="contenedor">
+        <div class="seccion-cabeza">
+          <h2 id="titulo-proceso" class="titulo-seccion">Cómo trabajamos</h2>
+          <p class="seccion-intro">
+            Cuatro pasos, siempre los mismos, para que sepas en todo momento
+            en qué punto está tu obra.
+          </p>
+        </div>
+
+        <div class="proceso">
+          <ol class="pasos" data-pasos>
+            <li class="paso" data-paso="1" data-modelo="assets/3d/paso-1.glb">
+              <span class="paso-numero" aria-hidden="true">01</span>
+              <div class="paso-texto">
+                <h3 class="paso-titulo">Visita y medición</h3>
+                <p>Vamos a ver la obra, tomamos medidas y te asesoramos sobre materiales y acabados.</p>
+              </div>
+              <figure class="paso-figura">
+                <img src="assets/img/paso-1.webp" width="1000" height="1000" loading="lazy" alt="">
+              </figure>
+            </li>
+            <li class="paso" data-paso="2">
+              <span class="paso-numero" aria-hidden="true">02</span>
+              <div class="paso-texto">
+                <h3 class="paso-titulo">Presupuesto por escrito</h3>
+                <p>Detallado por partidas y con plazo de ejecución. Sin compromiso.</p>
+              </div>
+            </li>
+            <li class="paso" data-paso="3">
+              <span class="paso-numero" aria-hidden="true">03</span>
+              <div class="paso-texto">
+                <h3 class="paso-titulo">Obra limpia</h3>
+                <p>Protegemos suelos y muebles, y dejamos todo recogido al final de cada jornada.</p>
+              </div>
+            </li>
+            <li class="paso" data-paso="4">
+              <span class="paso-numero" aria-hidden="true">04</span>
+              <div class="paso-texto">
+                <h3 class="paso-titulo">Entrega y repaso</h3>
+                <p>Revisamos contigo cada estancia antes de dar el trabajo por terminado.</p>
+              </div>
+            </li>
+          </ol>
+
+          <!-- Visor de escritorio: la pieza del paso activo; sin pieza, su número en relieve -->
+          <div class="visor-paso" aria-hidden="true" data-visor-paso data-activo="1">
+            <div class="marco">
+              <div class="marco-interior visor-paso-escena">
+                <img class="visor-paso-poster" data-poster-paso="1" src="assets/img/paso-1.webp" width="1000" height="1000" loading="lazy" alt="">
+                <span class="visor-paso-cifra" data-cifra-paso="2">02</span>
+                <span class="visor-paso-cifra" data-cifra-paso="3">03</span>
+                <span class="visor-paso-cifra" data-cifra-paso="4">04</span>
+                <canvas class="visor-paso-lienzo" data-lienzo-paso></canvas>
+              </div>
+            </div>
+            <p class="visor-paso-pie">
+              <span class="visor-paso-cuenta"><span data-visor-cuenta>01</span> / 04</span>
+              <span data-visor-titulo>Visita y medición</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Obra real: fotos de obra sobre la pared -->
+    <section class="seccion" id="obras" aria-labelledby="titulo-obras">
       <div class="contenedor">
         <div class="seccion-cabeza">
           <h2 id="titulo-obras" class="titulo-seccion">Obra reciente</h2>
@@ -333,42 +400,6 @@
             </figcaption>
           </figure>
         </div>
-      </div>
-    </section>
-
-    <!-- Proceso: una línea de replanteo que se marca de punta a punta -->
-    <section class="seccion" id="proceso" aria-labelledby="titulo-proceso">
-      <div class="contenedor">
-        <div class="seccion-cabeza">
-          <h2 id="titulo-proceso" class="titulo-seccion">Cómo trabajamos</h2>
-          <p class="seccion-intro">
-            Cuatro pasos, siempre los mismos, para que sepas en todo momento
-            en qué punto está tu obra.
-          </p>
-        </div>
-
-        <ol class="pasos" data-pasos>
-          <li class="paso">
-            <span class="paso-numero" aria-hidden="true">1</span>
-            <h3 class="paso-titulo">Visita y medición</h3>
-            <p>Vamos a ver la obra, tomamos medidas y te asesoramos sobre materiales y acabados.</p>
-          </li>
-          <li class="paso">
-            <span class="paso-numero" aria-hidden="true">2</span>
-            <h3 class="paso-titulo">Presupuesto por escrito</h3>
-            <p>Detallado por partidas y con plazo de ejecución. Sin compromiso.</p>
-          </li>
-          <li class="paso">
-            <span class="paso-numero" aria-hidden="true">3</span>
-            <h3 class="paso-titulo">Obra limpia</h3>
-            <p>Protegemos suelos y muebles, y dejamos todo recogido al final de cada jornada.</p>
-          </li>
-          <li class="paso">
-            <span class="paso-numero" aria-hidden="true">4</span>
-            <h3 class="paso-titulo">Entrega y repaso</h3>
-            <p>Revisamos contigo cada estancia antes de dar el trabajo por terminado.</p>
-          </li>
-        </ol>
       </div>
     </section>
 
