@@ -156,7 +156,7 @@ bsdf.inputs["Base Color"].default_value = (0.86, 0.85, 0.82, 1)
 bsdf.inputs["Roughness"].default_value = 0.85
 malla.materials.append(yeso)
 
-# Exporta solo la pieza; el techo azul lo pone la web
+# Exporta solo la pieza; el techo verde lo pone la web
 bpy.ops.object.select_all(action="DESELECT")
 roseton.select_set(True)
 bpy.context.view_layer.objects.active = roseton
@@ -169,13 +169,13 @@ bpy.ops.export_scene.gltf(
     export_apply=True,
 )
 
-# Techo pintado en el azul de la casa
+# Techo pintado en el verde de la casa
 bpy.ops.mesh.primitive_plane_add(size=12, location=(0, 0, 0))
 techo = bpy.context.active_object
-pintura = bpy.data.materials.new("AzulBolanos")
+pintura = bpy.data.materials.new("VerdeBolanos")
 pintura.use_nodes = True
 pb = pintura.node_tree.nodes["Principled BSDF"]
-pb.inputs["Base Color"].default_value = (0.006, 0.008, 0.05, 1)   # azul noche en lineal
+pb.inputs["Base Color"].default_value = (0.0025, 0.026, 0.014, 1)   # verde Bolaños hondo, en lineal
 pb.inputs["Roughness"].default_value = 0.7
 techo.data.materials.append(pintura)
 
@@ -194,12 +194,12 @@ bpy.ops.object.light_add(type="AREA", location=(2.5, -2.5, 3.0))
 relleno = bpy.context.active_object
 relleno.data.energy = 60
 relleno.data.size = 4
-relleno.data.color = (0.75, 0.8, 1.0)
+relleno.data.color = (0.82, 0.95, 0.86)
 relleno.rotation_euler = (Vector((0, 0, 0)) - relleno.location).to_track_quat("-Z", "Y").to_euler()
 
 mundo = bpy.data.worlds.new("Mundo")
 mundo.use_nodes = True
-mundo.node_tree.nodes["Background"].inputs["Color"].default_value = (0.005, 0.006, 0.02, 1)
+mundo.node_tree.nodes["Background"].inputs["Color"].default_value = (0.002, 0.01, 0.006, 1)
 bpy.context.scene.world = mundo
 
 escena = bpy.context.scene

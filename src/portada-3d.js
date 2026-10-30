@@ -1,5 +1,5 @@
 // Portada en 3D: el rosetón de escayola modelado en Blender (blender/roseton.py),
-// sobre un techo pintado en el azul de la casa. Una luz rasante sigue al puntero
+// sobre un techo pintado en el verde de la casa. Una luz rasante sigue al puntero
 // y deja ver el relieve; al bajar, la cámara se acerca y la pieza gira despacio.
 import {
   ACESFilmicToneMapping,
@@ -20,7 +20,7 @@ import {
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 
-const AZUL = new Color("#151a5c");
+const VERDE = new Color("#0e3a2b");
 const YESO = new Color("#e9e7e1");
 
 export async function iniciar({ lienzo, escenario, modelo, alListo }) {
@@ -33,20 +33,20 @@ export async function iniciar({ lienzo, escenario, modelo, alListo }) {
   renderer.shadowMap.type = VSMShadowMap;   // sombras suaves, como bajo una lámpara de obra
 
   const escena = new Scene();
-  escena.background = AZUL.clone().multiplyScalar(0.35);
+  escena.background = VERDE.clone().multiplyScalar(0.35);
 
   // Techo: plano en z = 0 mirando a la cámara
   const techo = new Mesh(
     new PlaneGeometry(14, 14),
-    new MeshStandardMaterial({ color: AZUL, roughness: 0.75, metalness: 0 })
+    new MeshStandardMaterial({ color: VERDE, roughness: 0.75, metalness: 0 })
   );
   techo.receiveShadow = true;
   escena.add(techo);
 
   const camara = new PerspectiveCamera(29, 1, 0.1, 40);
 
-  // Rebote de luz: la escayola en sombra queda gris, no azul
-  escena.add(new HemisphereLight(new Color("#fbf7f0"), new Color("#3a4290"), 0.55));
+  // Rebote de luz: la escayola en sombra queda gris, no verde
+  escena.add(new HemisphereLight(new Color("#fbf7f0"), new Color("#56635b"), 0.55));
 
   // Luz rasante: casi a ras del techo, para que cada hoja proyecte sombra
   const luz = new SpotLight(new Color("#fff3e2"), 60, 0, 0.36, 0.7, 1.1);
@@ -61,7 +61,7 @@ export async function iniciar({ lienzo, escenario, modelo, alListo }) {
   escena.add(luz, luz.target);
 
   // Relleno frío desde el lado contrario
-  const relleno = new SpotLight(new Color("#9aa6ff"), 6, 0, 0.9, 1, 1.4);
+  const relleno = new SpotLight(new Color("#dde8e1"), 6, 0, 0.9, 1, 1.4);
   relleno.position.set(2.4, -1.6, 2.6);
   escena.add(relleno, relleno.target);
 
