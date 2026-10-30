@@ -25,7 +25,7 @@ roble = mat("Parqué de roble", "D6B994", .62)
 roble_claro = mat("Parqué de roble claro", "E2CAA4", .62)
 carton = mat("Cartón protector", "B8935F", .9)
 plastico = mat("Plástico protector", "EEF2F2", .28)
-tapizado = mat("Tapizado salvia", "93A698", .92)
+tapizado = mat("Tapizado salvia", "E3CFBB", .92)
 polvo = mat("Polvo de yeso", "E2DED6", .95)
 carrocero = mat("Cinta de carrocero", "EFE1B8", .7)
 

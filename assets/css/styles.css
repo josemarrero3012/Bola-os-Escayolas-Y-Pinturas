@@ -20,21 +20,20 @@
   --sombra: #D6D4CC;       /* sombra de escayola, filetes y líneas */
   --sombra-honda: #A3A097;
 
-  /* Verde y rojo Bolaños, sacados de las cintas del logotipo.
-     El verde, hondo, pinta techos, paredes y titulares; el rojo es la marca
-     de obra: solo en lo que se pulsa y en lo que señala. */
-  --tinta: #0E3B2A;
-  --tinta-viva: #145239;
-  --noche: #06241A;        /* suelo / pie */
+  /* Naranja y blanco Bolaños. Un tostado muy oscuro pinta los titulares, el pie
+     va en naranja tostado y el naranja vivo marca lo que se pulsa y señala. */
+  --tinta: #2E1A10;
+  --tinta-viva: #4A2614;
+  --noche: #9A3409;        /* pie, en naranja tostado */
   --techo-blanco: #EEEDEA; /* techo de la portada, en penumbra fuera de la luz */
-  --texto: #1F2A25;
-  --texto-suave: #4E5B54;
-  --sobre-verde: #D8E3DC;
-  --sobre-verde-suave: #A6B9AE;
+  --texto: #2A211C;
+  --texto-suave: #5E524A;
+  --sobre-noche: #FFF4EC;
+  --sobre-noche-suave: #F2CDB4;
 
-  --rojo: #D10A22;         /* rojo del logotipo, ajustado para texto blanco */
-  --rojo-hondo: #A8071B;
-  --verde: #00804A;        /* verde del logotipo, para WhatsApp */
+  --naranja: #C8470C;      /* naranja de obra, ajustado para texto blanco */
+  --naranja-honda: #9A3409;
+  --verde: #00804A;        /* verde de WhatsApp, solo en su botón */
   --verde-hondo: #00603A;
 
   --luz: 255, 249, 236;    /* bombilla cálida */
@@ -96,7 +95,7 @@ a { color: inherit; }
 }
 
 :focus-visible {
-  outline: 3px solid var(--rojo);
+  outline: 3px solid var(--naranja);
   outline-offset: 3px;
 }
 .pie :focus-visible { outline-color: var(--cal); }
@@ -127,16 +126,16 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
    -------------------------------------------------------------------------- */
 
 .boton {
-  --relleno: var(--rojo-hondo);
+  --relleno: var(--naranja-honda);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: .6rem;
   min-height: 3.5rem;
   padding: .85rem 1.7rem;
-  border: 1px solid var(--rojo);
+  border: 1px solid var(--naranja);
   border-radius: 2px;
-  background: linear-gradient(var(--relleno), var(--relleno)) no-repeat 0 0 / 0 100%, var(--rojo);
+  background: linear-gradient(var(--relleno), var(--relleno)) no-repeat 0 0 / 0 100%, var(--naranja);
   color: var(--cal);
   font: inherit;
   font-size: 1rem;
@@ -158,9 +157,9 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 .boton-linea:hover { color: var(--cal); }
 
 .boton-claro {
-  --relleno: var(--rojo-hondo);
-  border-color: var(--rojo);
-  background-color: var(--rojo);
+  --relleno: var(--naranja-honda);
+  border-color: var(--naranja);
+  background-color: var(--naranja);
   color: #fff;
 }
 
@@ -191,7 +190,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   box-shadow: none;
 }
 .cabecera.is-scrolled {
-  box-shadow: 0 1px 0 var(--sombra), 0 18px 34px -26px rgba(14, 59, 42, .45);
+  box-shadow: 0 1px 0 var(--sombra), 0 18px 34px -26px rgba(46, 26, 16, .45);
 }
 .cabecera.is-oculta { transform: translateY(-100%); }
 
@@ -232,7 +231,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   right: 0;
   bottom: .2rem;
   height: 1px;
-  background: var(--rojo);
+  background: var(--naranja);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform .45s var(--curva);
@@ -348,7 +347,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
     justify-content: center;
     min-height: 3.5rem;
     border-radius: 2px;
-    background: var(--rojo);
+    background: var(--naranja);
     color: #fff;
     font-weight: 600;
     font-stretch: 110%;
@@ -363,7 +362,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 }
 
 /* --------------------------------------------------------------------------
-   Portada: un rosetón de escayola en un techo pintado en el verde de la casa
+   Portada: un rosetón de escayola en un techo pintado en blanco
    La pieza está modelada en Blender (blender/roseton.py). En escritorio se
    pinta en 3D con una luz rasante que sigue al puntero; mientras carga, en
    móvil o sin WebGL, se ve su render de Cycles.
@@ -445,8 +444,8 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 .linea:nth-child(2) { animation-delay: .5s; }
 .linea:nth-child(3) { animation-delay: .65s; }
 
-/* El punto del titular, en el rojo de la marca */
-.punto { color: var(--rojo); }
+/* El punto del titular, en el naranja de la marca */
+.punto { color: var(--naranja); }
 
 /* La palabra se extiende como la pasta bajo la llana */
 @keyframes extender {
@@ -506,8 +505,8 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   width: .55rem;
   height: .55rem;
   border-radius: 50%;
-  background: var(--rojo);
-  box-shadow: 0 0 12px 3px rgba(209, 10, 34, .3);
+  background: var(--naranja);
+  box-shadow: 0 0 12px 3px rgba(200, 71, 12, .3);
 }
 @media (pointer: fine) and (min-width: 960px) {
   .portada-pista { display: inline-flex; }
@@ -566,7 +565,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   width: 2.25rem;
   height: 2.25rem;
   fill: none;
-  stroke: var(--rojo);
+  stroke: var(--naranja);
   stroke-width: 1.4;
   stroke-linejoin: round;
   stroke-linecap: round;
@@ -655,8 +654,8 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   box-shadow:
     inset 1px 1px 0 #fff,
     inset -1px -1px 0 #c3c5bc,
-    0 2px 4px -2px rgba(14, 59, 42, .14),
-    0 40px 70px -40px rgba(14, 59, 42, .5);
+    0 2px 4px -2px rgba(46, 26, 16, .14),
+    0 40px 70px -40px rgba(46, 26, 16, .5);
 }
 
 .marco-interior {
@@ -781,7 +780,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 }
 .servicio-signo::after { transform: rotate(90deg); }
 .servicio.abierto .servicio-signo::after { transform: rotate(0deg); }
-.servicio.abierto .servicio-signo { color: var(--rojo); }
+.servicio.abierto .servicio-signo { color: var(--naranja); }
 
 .servicio-panel {
   display: grid;
@@ -835,7 +834,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   top: .45em;
   width: .4rem;
   height: .4rem;
-  background: var(--verde);
+  background: var(--naranja);
 }
 
 .servicio-foto {
@@ -866,7 +865,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
     box-shadow:
       0 0 0 clamp(.5rem, .8vw, .8rem) var(--cal),
       0 0 0 calc(clamp(.5rem, .8vw, .8rem) + 1px) var(--sombra),
-      0 50px 80px -50px rgba(14, 59, 42, .55);
+      0 50px 80px -50px rgba(46, 26, 16, .55);
   }
 
   .visor-marco img {
@@ -1018,7 +1017,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 
 /* --------------------------------------------------------------------------
    Cómo trabajamos: los pasos bajan en vertical por una línea que se marca en
-   rojo según avanzas. En escritorio, un visor fijo enseña la maqueta 3D del paso
+   naranja según avanzas. En escritorio, un visor fijo enseña la maqueta 3D del paso
    activo, suelta sobre la pared y sin marco; los pasos que aún no tienen maqueta
    muestran su número en relieve.
    -------------------------------------------------------------------------- */
@@ -1055,7 +1054,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   background: var(--sombra);
 }
 .pasos::after {
-  background: var(--rojo);
+  background: var(--naranja);
   transform-origin: top;
   transform: scaleY(var(--avance));
 }
@@ -1077,7 +1076,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   top: .55rem;
   width: 9px;
   height: 9px;
-  background: var(--rojo);
+  background: var(--naranja);
   transition: background-color .5s ease, transform .6s var(--salida);
 }
 
@@ -1147,7 +1146,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   }
   .js .paso.activo::before,
   .js .paso.hecho::before {
-    background: var(--rojo);
+    background: var(--naranja);
     transform: none;
   }
 
@@ -1190,9 +1189,9 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
     letter-spacing: -.05em;
     text-shadow:
       -1px -1px 0 #fff,
-      1px 1px 1px rgba(14, 59, 42, .16),
-      3px 6px 10px rgba(14, 59, 42, .08),
-      0 30px 40px rgba(14, 59, 42, .06);
+      1px 1px 1px rgba(46, 26, 16, .16),
+      3px 6px 10px rgba(46, 26, 16, .08),
+      0 30px 40px rgba(46, 26, 16, .06);
     transform: translateY(1rem);
   }
 
@@ -1308,7 +1307,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 
 .datos a {
   color: var(--tinta);
-  text-decoration-color: var(--rojo);
+  text-decoration-color: var(--naranja);
   text-decoration-thickness: 1px;
   text-underline-offset: .22em;
 }
@@ -1333,7 +1332,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   box-shadow:
     inset 1px 1px 0 #fff,
     inset -1px -1px 0 var(--sombra),
-    0 50px 90px -60px rgba(14, 59, 42, .55);
+    0 50px 90px -60px rgba(46, 26, 16, .55);
 }
 
 @media (min-width: 640px) {
@@ -1385,7 +1384,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   min-height: 7.5rem;
 }
 .campo input::placeholder,
-.campo textarea::placeholder { color: #66726B; }
+.campo textarea::placeholder { color: #6E625A; }
 
 .campo input:hover,
 .campo textarea:hover { border-color: var(--sombra-honda); }
@@ -1394,7 +1393,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 .campo textarea:focus-visible {
   border-color: var(--tinta);
   outline: 0;
-  box-shadow: 0 0 0 3px rgba(209, 10, 34, .25);
+  box-shadow: 0 0 0 3px rgba(200, 71, 12, .25);
 }
 
 .campo [aria-invalid="true"] {
@@ -1437,7 +1436,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   color: var(--cal);
 }
 .opcion input:focus-visible + span {
-  outline: 3px solid var(--rojo);
+  outline: 3px solid var(--naranja);
   outline-offset: 2px;
 }
 
@@ -1484,7 +1483,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 .pie {
   padding-block: clamp(3.5rem, 2.5rem + 3vw, 5.5rem) 2rem;
   background: var(--noche);
-  color: var(--sobre-verde-suave);
+  color: var(--sobre-noche-suave);
   font-size: .9688rem;
 }
 
@@ -1524,7 +1523,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 }
 
 .pie a {
-  color: var(--sobre-verde);
+  color: var(--sobre-noche);
   text-decoration: none;
   text-underline-offset: .22em;
 }
@@ -1537,7 +1536,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   gap: .5rem 2rem;
   margin-top: clamp(3rem, 5vw, 4.5rem);
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(216, 227, 220, .16);
+  border-top: 1px solid rgba(255, 244, 236, .22);
   font-size: .875rem;
 }
 

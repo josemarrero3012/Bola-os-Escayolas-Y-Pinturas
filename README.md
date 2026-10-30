@@ -13,7 +13,7 @@ La página es una habitación: empieza en el techo y termina en el rodapié. Cad
 - **Portada:** un rosetón de escayola modelado en Blender, en gris perla sobre un techo blanco, con hojas de acanto detalladas y oclusión ambiental horneada en Cycles. En escritorio se pinta en 3D en tiempo real: una luz rasante sigue al puntero y descubre el relieve, y al bajar la cámara se acerca y la pieza gira. Mientras carga, en móvil o sin WebGL se ve su render de Cycles. El titular se extiende como la pasta bajo la llana y los iconos de los oficios se trazan como con lápiz de obra.
 - **Servicios:** lista desplegable; en escritorio, un visor cambia de foto con una pasada de llana.
 - **Obra reciente:** las fotos aparecen enlucidas y se rascan al entrar en pantalla.
-- **Cómo trabajamos:** va justo después de los servicios. Los pasos bajan en vertical por una línea que se marca en rojo según avanzas. Cada paso tiene su maqueta animada, y cada una en un escenario distinto. En escritorio, un visor fijo enseña en 3D la del paso activo; en móvil, cada paso lleva su render. Un paso sin maqueta mostraría su número en relieve.
+- **Cómo trabajamos:** va justo después de los servicios. Los pasos bajan en vertical por una línea que se marca en naranja según avanzas. Cada paso tiene su maqueta animada, y cada una en un escenario distinto. En escritorio, un visor fijo enseña en 3D la del paso activo; en móvil, cada paso lleva su render. Un paso sin maqueta mostraría su número en relieve.
 
 Con «reducir movimiento» activado en el sistema, todo aparece ya terminado y la portada usa el render.
 
@@ -44,7 +44,7 @@ Los pósteres (`build-3d/roseton-*.png`) se pasan a WebP en `assets/img/`. El mo
 
 ## Las maquetas de «Cómo trabajamos»
 
-Cada paso puede tener una maqueta hecha en Blender (un `.blend` y su `.glb` con la animación en un solo clip). `blender/paso.py` pasa sus materiales de marca a la paleta actual («Azul Bolaños» a verde, «Tinta de plano» a rojo) y renderiza con Cycles el póster con fondo transparente:
+Cada paso puede tener una maqueta hecha en Blender (un `.blend` y su `.glb` con la animación en un solo clip). `blender/paso.py` pasa sus materiales de marca a la paleta actual («Azul Bolaños» a naranja, «Goma azul oscura» a tostado oscuro, «Tinta de plano» a naranja hondo, «Tapizado salvia» a lino) y renderiza con Cycles el póster con fondo transparente:
 
 ```bash
 python blender/paso.py MAQUETA.blend MAQUETA.glb build-paso [--fotograma 96]
