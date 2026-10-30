@@ -26,7 +26,7 @@ for (const [, ruta] of css.matchAll(/url\("(\.\.\/[^"]+)"\)/g)) {
 }
 
 // 3D: modelos y, en la web compilada, los módulos empaquetados
-const tresD = ["assets/3d/roseton.glb"];
+const tresD = ["assets/3d/arquitectura.glb"];
 for (const visor of ["portada-3d.js", "pasos-3d.js"]) tresD.push(raiz === "." ? `src/${visor}` : `assets/js/${visor}`);
 // Piezas de «Cómo trabajamos» declaradas en la página
 for (const [, modelo] of html.matchAll(/\sdata-modelo="([^"]+)"/g)) tresD.push(modelo);
