@@ -1,6 +1,6 @@
-# Prototipo Web - Escayolas y Pinturas Bolaños
+# Prototipo Web - Escayolas y Reformas Bolaños
 
-Propuesta de web para **Escayolas y Pinturas Bolaños**, empresa de escayola, pladur, pintura y reformas en Las Palmas de Gran Canaria, desarrollada para Aterna Studio.
+Propuesta de web para **Escayolas y Reformas Bolaños**, empresa de escayola, pladur, pintura y reformas en Las Palmas de Gran Canaria, desarrollada para Aterna Studio.
 
 **[Ver el prototipo publicado](https://josemarrero3012.github.io/Bola-os-Escayolas-Y-Pinturas/)**
 
