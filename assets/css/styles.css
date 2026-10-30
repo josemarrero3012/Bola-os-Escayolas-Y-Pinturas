@@ -364,12 +364,13 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 /* --------------------------------------------------------------------------
    Portada: «Arquitectura suspendida», siete piezas de escayola modeladas en
    Blender. En escritorio se pinta en 3D y, al bajar, las piezas se abren por
-   capas y salen hacia abajo; mientras carga, en móvil o sin WebGL, se ve su
-   render de Cycles en el mismo sitio y con el mismo encuadre.
+   capas y después se dispersan hacia los bordes mientras «Qué hacemos» sube por
+   encima; mientras carga, en móvil o sin WebGL, se ve su render de Cycles en el
+   mismo sitio y con el mismo encuadre.
    -------------------------------------------------------------------------- */
 
 .portada {
-  --p: 0;                       /* avance del desplazamiento dentro de la portada, 0 a 1 */
+  --dispersion: 0;   /* salida de las piezas, de 0 a 1; la marca main.js */
   position: relative;
   background: var(--techo-blanco);
   color: var(--texto);
@@ -391,9 +392,6 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   height: 100%;
   opacity: 0;
   transition: opacity 1.2s ease;
-  /* Las piezas que bajan se funden con el pie de la portada en vez de cortarse */
-  -webkit-mask-image: linear-gradient(#000 80%, transparent 99%);
-  mask-image: linear-gradient(#000 80%, transparent 99%);
 }
 /* El render ocupa la derecha, entre la cabecera y los oficios. El 3D toma su
    rectángulo como encuadre, así que al entrar encaja encima sin saltar. */
@@ -416,8 +414,6 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 }
 .portada.en-3d .portada-lienzo { opacity: 1; }
 .portada.en-3d .portada-poster { opacity: 0; }
-/* Al bajar, el velo que protege el texto se retira junto con el texto */
-.portada.con-3d .portada-escena::before { opacity: calc(1 - var(--p) * 2); }
 
 /* Velo de cal para que el texto se lea sobre el techo */
 .portada-escena::before {
@@ -437,8 +433,6 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   justify-content: flex-end;
   gap: clamp(1.75rem, 3vw, 2.5rem);
   padding-block: calc(var(--cabecera) + 3rem) clamp(1.5rem, 3vw, 2.5rem);
-  opacity: calc(1 - var(--p) * 1.8);
-  transform: translateY(calc(var(--p) * -6vh));
 }
 
 .inicio-titulo {
@@ -528,13 +522,45 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   .portada.en-3d .portada-pista { opacity: 1; transition-delay: 1.5s; }
 }
 
-/* Con 3D la portada dura más que la pantalla: es el recorrido en el que la pieza se abre */
+/* Con 3D la portada dura más que la pantalla: 60svh en los que la pieza se abre por
+   capas y una pantalla más en la que se dispersa mientras «Qué hacemos» sube por
+   encima, sin fondo propio. El techo de la portada se aclara hasta el yeso del resto
+   de la página, así que no queda ninguna costura entre las dos. */
 @media (min-width: 960px) {
-  .portada.con-3d { height: 240svh; }
+  .portada.con-3d {
+    height: 260svh;
+    background-color: rgb(238 237 234 / calc(1 - var(--dispersion) * 1.6));
+  }
   .portada.con-3d .portada-escena {
     position: sticky;
     top: 0;
     height: 100svh;
+  }
+  .portada.con-3d + .seccion {
+    position: relative;
+    z-index: 1;
+    margin-top: -100svh;
+  }
+
+  /* El texto y su velo se retiran en cuanto las piezas empiezan a salir */
+  .portada.con-3d .portada-contenido {
+    opacity: calc(1 - var(--dispersion) * 4);
+    transform: translateY(calc(var(--dispersion) * -8vh));
+  }
+  .portada.con-3d .portada-escena::before { opacity: calc(1 - var(--dispersion) * 3); }
+  .portada.sin-texto .portada-contenido { visibility: hidden; }
+
+  /* «Qué hacemos» entra al compás: el titular llega desde algo más abajo y un poco
+     mayor, como si la cámara atravesara las piezas que se van, y la lista justo detrás */
+  .portada.con-3d + .seccion .seccion-cabeza {
+    opacity: var(--entrada, 1);
+    transform:
+      translateY(calc((1 - var(--entrada, 1)) * 14vh))
+      scale(calc(1 + (1 - var(--entrada, 1)) * .06));
+    transform-origin: 0 100%;
+  }
+  .portada.con-3d + .seccion .servicios-rejilla {
+    opacity: calc(var(--entrada, 1) * 1.6 - .6);
   }
 }
 

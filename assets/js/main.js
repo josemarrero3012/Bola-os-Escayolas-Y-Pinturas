@@ -22,7 +22,9 @@
     if (!cabecera.classList.contains("menu-abierto")) {
       cabecera.classList.toggle("is-oculta", y > ultimoScroll && y > 320);
     }
-    const finPortada = portada.offsetTop + portada.offsetHeight - cabecera.offsetHeight;
+    // En escritorio «Qué hacemos» sube por encima del final de la portada: la cabecera
+    // deja de ser transparente cuando esa sección llega arriba
+    const finPortada = portada.nextElementSibling.offsetTop - cabecera.offsetHeight;
     cabecera.classList.toggle("sobre-portada", y < finPortada);
     if (barra) barra.classList.toggle("visible", y > window.innerHeight * .6);
     ultimoScroll = y;
@@ -61,35 +63,76 @@
     }
   });
 
-  // Portada: avance del desplazamiento (para el texto) y la pieza en 3D en pantallas grandes
-  if (portada) {
-    const marcarAvance = () => {
-      const r = portada.getBoundingClientRect();
-      const recorrido = Math.max(1, r.height - window.innerHeight);
-      portada.style.setProperty("--p", Math.min(1, Math.max(0, -r.top / recorrido)).toFixed(3));
-    };
-    marcarAvance();
-    window.addEventListener("scroll", marcarAvance, { passive: true });
+  // Portada en pantallas grandes: la pieza en 3D se abre por capas al bajar y después se
+  // dispersa hacia los bordes mientras «Qué hacemos» sube por encima. El texto de la
+  // portada, la entrada de la sección y el 3D siguen el mismo avance suavizado, para que
+  // la transición vaya a la vez aunque la rueda del ratón baje a saltos.
+  const grande = window.matchMedia("(min-width: 960px)").matches;
+  const lienzo = portada?.querySelector("[data-lienzo]");
+  if (grande && webgl() && !quieto.matches && lienzo) {
+    const siguiente = portada.nextElementSibling;
+    const progreso = { valor: 0 };   // de 0 a 1 se abre; de 1 a 2 se dispersa
+    let objetivo = 0;
+    let siguiendo = false;
+    let activo = true;
+    const limitar = (t) => Math.min(1, Math.max(0, t));
+    const suave = (t) => t * t * (3 - 2 * t);
 
-    const grande = window.matchMedia("(min-width: 960px)").matches;
-    const lienzo = portada.querySelector("[data-lienzo]");
-    if (grande && webgl() && !quieto.matches && lienzo) {
-      portada.classList.add("con-3d");
-      import("./portada-3d.js")
-        .then(({ iniciar }) =>
-          iniciar({
-            lienzo,
-            escenario: portada,
-            poster: portada.querySelector(".portada-poster img"),
-            modelo: "assets/3d/arquitectura.glb",
-            alListo: () => portada.classList.add("en-3d"),
-          })
-        )
-        .catch(() => {
-          // Sin 3D se queda el render de Cycles, sin el recorrido de scroll
-          portada.classList.remove("con-3d");
-        });
-    }
+    const pintar = () => {
+      const salida = limitar(progreso.valor - 1);
+      portada.style.setProperty("--dispersion", salida.toFixed(4));
+      portada.classList.toggle("sin-texto", salida > 0.25);
+      siguiente.style.setProperty("--entrada", suave(limitar((salida - 0.3) / 0.6)).toFixed(4));
+    };
+    const seguir = () => {
+      if (!activo) return;
+      const resta = objetivo - progreso.valor;
+      progreso.valor = Math.abs(resta) < 0.0005 ? objetivo : progreso.valor + resta * 0.12;
+      pintar();
+      siguiendo = progreso.valor !== objetivo;
+      if (siguiendo) requestAnimationFrame(seguir);
+    };
+    const medir = () => {
+      const alto = window.innerHeight;
+      const arriba = portada.getBoundingClientRect().top;
+      const entra = siguiente.getBoundingClientRect().top;
+      // Se abre hasta que «Qué hacemos» asoma por abajo y se dispersa mientras sube hasta la cabecera
+      const apertura = limitar(-arriba / Math.max(1, entra - arriba - alto));
+      const salida = limitar((alto - entra) / Math.max(1, alto - cabecera.offsetHeight));
+      objetivo = apertura + salida;
+      if (!siguiendo) {
+        siguiendo = true;
+        requestAnimationFrame(seguir);
+      }
+    };
+
+    portada.classList.add("con-3d");
+    medir();
+    progreso.valor = objetivo;   // al recargar a mitad de página, sin animar desde arriba
+    pintar();
+    window.addEventListener("scroll", medir, { passive: true });
+    window.addEventListener("resize", medir);
+
+    import("./portada-3d.js")
+      .then(({ iniciar }) =>
+        iniciar({
+          lienzo,
+          escenario: portada,
+          poster: portada.querySelector(".portada-poster img"),
+          modelo: "assets/3d/arquitectura.glb",
+          progreso,
+          alListo: () => portada.classList.add("en-3d"),
+        })
+      )
+      .catch(() => {
+        // Sin 3D se queda el render de Cycles, sin el recorrido de scroll
+        activo = false;
+        window.removeEventListener("scroll", medir);
+        window.removeEventListener("resize", medir);
+        portada.classList.remove("con-3d", "sin-texto");
+        portada.style.removeProperty("--dispersion");
+        siguiente.style.removeProperty("--entrada");
+      });
   }
 
   // Servicios: un panel abierto cada vez; en escritorio el visor cambia de foto
