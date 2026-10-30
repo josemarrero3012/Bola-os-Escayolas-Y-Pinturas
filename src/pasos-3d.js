@@ -1,5 +1,5 @@
-// Visor 3D de «Cómo trabajamos»: enseña la maqueta del paso activo sobre un fondo de
-// estudio, en vista axonométrica como la cámara de Blender del autor, con su animación
+// Visor 3D de «Cómo trabajamos»: enseña la maqueta del paso activo suelta sobre la
+// pared, en vista axonométrica como la cámara de Blender del autor, con su animación
 // en bucle y un ligero vaivén que sigue al puntero. Cada pieza se carga la primera vez
 // que hace falta; un paso sin pieza deja ver su número en relieve.
 import {
@@ -28,27 +28,31 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 const TAMANO = 2;          // cada pieza se escala para que su lado mayor mida esto
 // Dirección de la cámara de las maquetas (la de Blender, pasada a ejes glTF)
 const VISTA = new Vector3(5.8, 6.8, 8).normalize();
+// Ejes de la pantalla para esa vista: sirven para encuadrar la silueta de cada maqueta
+const DERECHA = new Vector3().crossVectors(VISTA.clone().negate(), new Vector3(0, 1, 0)).normalize();
+const ARRIBA = new Vector3().crossVectors(DERECHA, VISTA.clone().negate());
 
 export async function iniciar({ lienzo, escenario, modelos, alCambiar }) {
-  // Fondo transparente: el degradado de estudio lo pone la hoja de estilos
+  // Fondo transparente: la maqueta se apoya directamente en la pared de la sección
   const renderer = new WebGLRenderer({ canvas: lienzo, antialias: true, alpha: true, powerPreference: "high-performance" });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.toneMapping = NeutralToneMapping;
+  renderer.toneMappingExposure = 1.12;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = VSMShadowMap;
 
   const escena = new Scene();
   const pmrem = new PMREMGenerator(renderer);
   escena.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  escena.environmentIntensity = 0.45;
+  escena.environmentIntensity = 0.4;
   pmrem.dispose();
 
-  const cielo = new HemisphereLight(new Color("#ffffff"), new Color("#d9d6cf"), 0.7);
+  const cielo = new HemisphereLight(new Color("#ffffff"), new Color("#d9d6cf"), 0.55);
   escena.add(cielo);
 
   // Las tres luces del estudio de las maquetas: principal, relleno y contraluz
-  const sol = new DirectionalLight(new Color("#fff6ea"), 2.2);
+  const sol = new DirectionalLight(new Color("#fff6ea"), 2.6);
   sol.position.set(1, 7, 4);
   sol.castShadow = true;
   sol.shadow.mapSize.set(2048, 2048);
@@ -75,7 +79,7 @@ export async function iniciar({ lienzo, escenario, modelos, alCambiar }) {
 
   const camara = new OrthographicCamera(-1, 1, 1, -1, 0.1, 50);
   const mira = new Vector3(0, 0.5, 0);
-  let radio = 1.2;
+  let huella = { ancho: 1.2, alto: 1.2 };   // media silueta de la maqueta en pantalla
 
   const plato = new Group();      // gira con el tiempo
   escena.add(plato);
@@ -100,8 +104,19 @@ export async function iniciar({ lienzo, escenario, modelos, alCambiar }) {
         pieza.position.set(-centro.x, -caja.min.y * escala, -centro.z);
         const soporte = new Group();
         soporte.add(pieza);
-        soporte.userData.alto = tam.y * escala;
-        soporte.userData.radio = tam.multiplyScalar(escala / 2).length();
+        // Silueta en la vista axonométrica: las esquinas de la caja proyectadas en pantalla
+        const final = new Box3().setFromObject(soporte);
+        let [x0, x1, y0, y1] = [Infinity, -Infinity, Infinity, -Infinity];
+        for (const x of [final.min.x, final.max.x])
+          for (const y of [final.min.y, final.max.y])
+            for (const z of [final.min.z, final.max.z]) {
+              const esquina = new Vector3(x, y, z);
+              const px = esquina.dot(DERECHA);
+              const py = esquina.dot(ARRIBA);
+              [x0, x1, y0, y1] = [Math.min(x0, px), Math.max(x1, px), Math.min(y0, py), Math.max(y1, py)];
+            }
+        soporte.userData.mira = DERECHA.clone().multiplyScalar((x0 + x1) / 2).addScaledVector(ARRIBA, (y0 + y1) / 2);
+        soporte.userData.huella = { ancho: (x1 - x0) / 2, alto: (y1 - y0) / 2 };
         // La animación de la maqueta, en bucle
         if (animations.length) {
           const mezclador = new AnimationMixer(pieza);
@@ -128,8 +143,8 @@ export async function iniciar({ lienzo, escenario, modelos, alCambiar }) {
 
   let aspecto = 1;
   const encuadrar = () => {
-    // La maqueta entra entera, con aire alrededor
-    const medio = radio * (aspecto < 1 ? 1.02 / aspecto : 1.02);
+    // La maqueta entra entera, con un poco de aire para el vaivén
+    const medio = Math.max(huella.alto, huella.ancho / aspecto) * 1.22;
     camara.left = -medio * aspecto;
     camara.right = medio * aspecto;
     camara.top = medio;
@@ -175,8 +190,8 @@ export async function iniciar({ lienzo, escenario, modelos, alCambiar }) {
       actual = soporte;
       entrada = 0;
       // Encuadre según el tamaño de la pieza
-      mira.y = soporte.userData.alto * 0.42;
-      radio = soporte.userData.radio;
+      mira.copy(soporte.userData.mira);
+      huella = soporte.userData.huella;
       encuadrar();
     }
     alCambiar?.(true);

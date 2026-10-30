@@ -70,7 +70,11 @@ perfil += [(0.885, 0.092), (0.865, 0.092)]
 for k in range(1, 17):                         # media caña hacia el lecho
     t = k / 16
     perfil.append((0.865 - 0.07 * t, 0.092 - 0.03 * math.sin(t * math.pi / 2)))
-perfil += [(0.70, 0.062), (0.55, 0.06), (0.40, 0.06), (0.24, 0.06), (0.0, 0.06)]
+# Lecho en anillos estrechos: con anillos anchos la oclusión de los vértices
+# se estira en rayos entre las hojas
+for k in range(71):
+    t = k / 70
+    perfil.append((0.70 * (1 - t), 0.06 + 0.002 * (1 - t) ** 2))
 torno(bm, perfil, 384)
 
 # Sarta de perlas
@@ -106,7 +110,8 @@ def hoja(angulo, r0, r1, ancho, alto, lobulos, rizo):
         z -= 0.006 * vena * a * (1 - a) * 4 * math.sin(math.pi * u)           # venas hacia cada lóbulo
         z += 0.012 * s * s * math.sin(u * math.pi * lobulos * 2)              # borde ondulado
         z += rizo * u ** 3 * (1 - s * s)                                      # la punta se levanta
-        z = base + (z - base) * (1 - s ** 10)                                 # el borde apoya en el lecho
+        # El borde se mete un poco bajo el lecho: sin superficies coplanarias que parpadeen
+        z = base - 0.0015 + (z - base + 0.0015) * (1 - s ** 10)
         return (r * ca - y * sa, r * sa + y * ca, z)
 
     superficie(bm, f, 140, 56)
@@ -181,8 +186,25 @@ bpy.context.view_layer.objects.active = roseton
 ao = malla.color_attributes.new("AO", "BYTE_COLOR", "POINT")
 malla.color_attributes.active_color = ao
 mundo.light_settings.distance = 0.12
-escena.cycles.samples = 16 if rapido else 96
+escena.cycles.samples = 16 if rapido else 128
 bpy.ops.object.bake(type="AO", target="VERTEX_COLORS")
+
+# Suaviza la oclusión con sus vecinos para quitar el grano del horneado
+import numpy as np
+n = len(malla.vertices)
+aristas = np.empty(len(malla.edges) * 2, dtype=np.int32)
+malla.edges.foreach_get("vertices", aristas)
+a, b = aristas[0::2], aristas[1::2]
+valores = np.empty(n * 4, dtype=np.float32)
+ao.data.foreach_get("color", valores)
+valores = valores.reshape(n, 4)
+gris = valores[:, 0].astype(np.float64)
+vecinos = np.bincount(a, minlength=n) + np.bincount(b, minlength=n)
+for _ in range(3):
+    suma = np.bincount(a, weights=gris[b], minlength=n) + np.bincount(b, weights=gris[a], minlength=n)
+    gris = 0.5 * gris + 0.5 * np.where(vecinos > 0, suma / np.maximum(vecinos, 1), gris)
+valores[:, 0] = valores[:, 1] = valores[:, 2] = gris
+ao.data.foreach_set("color", valores.ravel())
 
 # Exporta solo la pieza (con su oclusión); el techo lo pone la web
 bpy.ops.object.select_all(action="DESELECT")
