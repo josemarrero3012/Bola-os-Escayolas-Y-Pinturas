@@ -174,7 +174,7 @@ export async function iniciar({ lienzo, escenario, modelo, alListo }) {
     luzActual.y = acercar(luzActual.y, puntero.y * 1.4, 0.06);
     const az = Math.atan2(luzActual.y, luzActual.x || -0.001);
     const d = 4.6;
-    luz.position.set(Math.cos(az) * d, Math.sin(az) * d, 0.62 + Math.hypot(luzActual.x, luzActual.y) * 0.1);
+    luz.position.set(Math.cos(az) * d, Math.sin(az) * d, 0.85 + Math.hypot(luzActual.x, luzActual.y) * 0.1);
     luz.target.position.set(0, 0, 0.05);
 
     const firma = [p, luzActual.x, luzActual.y, ancho, alto].map((n) => n.toFixed(4)).join();

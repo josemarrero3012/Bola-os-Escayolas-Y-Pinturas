@@ -77,3 +77,21 @@ escena.render.image_settings.file_format = "PNG"
 escena.render.image_settings.color_mode = "RGBA"
 escena.render.filepath = str(SALIDA / "paso.png")
 bpy.ops.render.render(write_still=True)
+
+# La sombra del fondo de estudio acaba en los bordes de ese plano: se desvanece
+# hacia fuera para que en la web no se vea su rectángulo
+import numpy as np
+imagen = bpy.data.images.load(str(SALIDA / "paso.png"))
+ancho, alto = imagen.size
+pixeles = np.empty(ancho * alto * 4, dtype=np.float32)
+imagen.pixels.foreach_get(pixeles)
+pixeles = pixeles.reshape(alto, ancho, 4)
+yy, xx = np.mgrid[0:alto, 0:ancho]
+distancia = np.hypot((xx - ancho / 2) / (ancho / 2), (yy - alto / 2) / (alto / 2))
+desvanecer = np.clip((0.98 - distancia) / 0.3, 0, 1)
+sombra = pixeles[..., 3] < 0.985          # lo opaco es la maqueta; lo translúcido, su sombra
+pixeles[..., 3] = np.where(sombra, pixeles[..., 3] * desvanecer, pixeles[..., 3])
+imagen.pixels.foreach_set(pixeles.ravel())
+imagen.filepath_raw = str(SALIDA / "paso.png")
+imagen.file_format = "PNG"
+imagen.save()
