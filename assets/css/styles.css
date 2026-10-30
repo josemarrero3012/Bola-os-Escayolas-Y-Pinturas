@@ -902,14 +902,11 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 }
 
 /* --------------------------------------------------------------------------
-   Obra reciente: un paño de cal en relieve, como el de las opiniones
+   Obra reciente: fotos de obra sobre la pared
    Las fotos están "enlucidas" y se rascan al entrar en pantalla.
    -------------------------------------------------------------------------- */
 
-.seccion-obras {
-  background: var(--cal);
-  box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 var(--sombra);
-}
+
 
 .obras {
   display: grid;
@@ -1010,17 +1007,30 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 }
 
 /* --------------------------------------------------------------------------
-   Cómo trabajamos: la línea se marca de punta a punta al llegar
+   Cómo trabajamos: los pasos bajan en vertical por una línea que se marca en
+   rojo según avanzas. En escritorio, un visor fijo enseña la pieza 3D del paso
+   activo; los pasos que aún no tienen pieza muestran su número en relieve.
    -------------------------------------------------------------------------- */
 
-.pasos {
-  --hecho: 1;
-  position: relative;
+.seccion-proceso {
+  background: var(--cal);
+  box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 var(--sombra);
+}
+
+.proceso {
   display: grid;
   gap: 3rem;
-  padding: 0 0 0 2rem;
+}
+
+.pasos {
+  --avance: 1;
+  position: relative;
+  display: grid;
+  margin: 0;
+  padding: 0 0 0 clamp(2rem, 4vw, 3.5rem);
   list-style: none;
 }
+.js .pasos { --avance: 0; }
 
 /* Guía y línea marcada */
 .pasos::before,
@@ -1028,7 +1038,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   content: "";
   position: absolute;
   left: 0;
-  top: 0;
+  top: .5rem;
   bottom: 0;
   width: 1px;
   background: var(--sombra);
@@ -1036,88 +1046,187 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 .pasos::after {
   background: var(--rojo);
   transform-origin: top;
-  transform: scaleY(var(--hecho));
+  transform: scaleY(var(--avance));
 }
 
-@media (min-width: 1024px) {
-  .pasos {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: clamp(1.5rem, 3vw, 3rem);
-    padding: 2.25rem 0 0;
-  }
-  .pasos::before,
-  .pasos::after {
-    right: 0;
-    bottom: auto;
-    width: auto;
-    height: 1px;
-  }
-  .pasos::after {
-    transform-origin: left;
-    transform: scaleX(var(--hecho));
-  }
+.paso {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 1.1rem;
+  padding-bottom: clamp(3rem, 6vw, 4.5rem);
 }
-
-.js .pasos { --hecho: 0; }
-.js .pasos.marcados { --hecho: 1; }
-.js .pasos::after { transition: transform 1.8s var(--curva); }
-
-.paso { position: relative; }
 
 /* Cada paso, una marca sobre la línea */
 .paso::before {
   content: "";
   position: absolute;
-  left: calc(-2rem - 4px);
-  top: .6rem;
+  left: calc(-1 * clamp(2rem, 4vw, 3.5rem) - 4px);
+  top: .55rem;
   width: 9px;
   height: 9px;
   background: var(--rojo);
-  transition: background-color .4s ease, transform .6s var(--salida);
-}
-@media (min-width: 1024px) {
-  .paso::before {
-    left: 0;
-    top: calc(-2.25rem - 4px);
-  }
+  transition: background-color .5s ease, transform .6s var(--salida);
 }
 
 .paso-numero {
-  display: block;
-  margin-bottom: clamp(1rem, 2.5vw, 2rem);
   color: var(--tinta);
-  font-size: clamp(3.25rem, 2.4rem + 2.4vw, 5.25rem);
+  font-size: clamp(3.5rem, 2.4rem + 4vw, 7rem);
   font-weight: 200;
   font-stretch: 125%;
-  line-height: .9;
-  transition: opacity .6s ease, transform .9s var(--salida);
+  font-variant-numeric: tabular-nums;
+  line-height: .8;
+  letter-spacing: -.04em;
 }
-
-.js .pasos:not(.marcados) .paso::before {
-  background: var(--sombra);
-  transform: scale(.4);
-}
-.js .pasos:not(.marcados) .paso-numero {
-  opacity: 0;
-  transform: translateY(.75rem);
-}
-.js .pasos .paso:nth-child(2)::before,
-.js .pasos .paso:nth-child(2) .paso-numero { transition-delay: .35s; }
-.js .pasos .paso:nth-child(3)::before,
-.js .pasos .paso:nth-child(3) .paso-numero { transition-delay: .75s; }
-.js .pasos .paso:nth-child(4)::before,
-.js .pasos .paso:nth-child(4) .paso-numero { transition-delay: 1.15s; }
 
 .paso-titulo {
-  margin-bottom: .5rem;
+  margin-bottom: .55rem;
   color: var(--tinta);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: clamp(1.3rem, 1.1rem + .6vw, 1.75rem);
+  font-weight: 500;
   font-stretch: 112%;
-  line-height: 1.25;
+  line-height: 1.2;
+  letter-spacing: -.01em;
 }
 
-.paso p { max-width: 24rem; }
+.paso p {
+  max-width: 26rem;
+  color: var(--texto);
+}
+
+.paso-figura {
+  margin: .75rem 0 0;
+  padding: clamp(.5rem, 2vw, .75rem);
+  border-radius: 2px;
+  background: linear-gradient(145deg, #fff 0%, var(--yeso) 100%);
+  box-shadow:
+    inset 1px 1px 0 #fff,
+    inset -1px -1px 0 var(--sombra),
+    0 30px 60px -40px rgba(14, 59, 42, .45);
+}
+.paso-figura img {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  object-fit: cover;
+}
+
+.visor-paso { display: none; }
+
+@media (min-width: 960px) {
+  .proceso {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(3rem, 6vw, 7rem);
+    align-items: start;
+  }
+
+  /* Cada paso ocupa casi una pantalla: el que cruza el centro es el activo */
+  .paso {
+    min-height: 58svh;
+    padding-bottom: 0;
+  }
+  .paso:last-child { min-height: 42svh; }
+  .paso-figura { display: none; }
+
+  .js .paso-numero,
+  .js .paso-texto {
+    opacity: .26;
+    transform: translateX(-.5rem);
+    transition: opacity .7s ease, transform .9s var(--salida);
+  }
+  .js .paso::before {
+    background: var(--sombra);
+    transform: scale(.55);
+  }
+  .js .paso.activo .paso-numero,
+  .js .paso.activo .paso-texto {
+    opacity: 1;
+    transform: none;
+  }
+  .js .paso.activo::before,
+  .js .paso.hecho::before {
+    background: var(--rojo);
+    transform: none;
+  }
+
+  .visor-paso {
+    position: sticky;
+    /* Centrado en la pantalla: escena + pie */
+    top: max(1.5rem, (100svh - min(64svh, 42rem)) / 2 - 1.75rem);
+    display: block;
+  }
+
+  .visor-paso-escena {
+    position: relative;
+    overflow: hidden;
+    height: min(64svh, 42rem);
+    padding: 0;
+    background: radial-gradient(120% 90% at 50% 30%, #fff 0%, var(--yeso) 62%, #e7e6e1 100%);
+  }
+
+  .visor-paso-poster,
+  .visor-paso-cifra,
+  .visor-paso-lienzo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity .6s ease, transform .9s var(--salida);
+  }
+  .visor-paso-poster {
+    object-fit: cover;
+    transform: scale(.97);
+  }
+
+  /* Número en relieve de escayola, como un florón sin tallar todavía */
+  .visor-paso-cifra {
+    display: grid;
+    place-items: center;
+    color: var(--yeso);
+    font-size: clamp(9rem, 6rem + 9vw, 17rem);
+    font-weight: 200;
+    font-stretch: 125%;
+    line-height: 1;
+    letter-spacing: -.05em;
+    text-shadow:
+      -1px -1px 0 #fff,
+      1px 1px 1px rgba(14, 59, 42, .16),
+      3px 6px 10px rgba(14, 59, 42, .08),
+      0 30px 40px rgba(14, 59, 42, .06);
+    transform: translateY(1rem);
+  }
+
+  [data-activo="1"] [data-poster-paso="1"],
+  [data-activo="2"] [data-poster-paso="2"],
+  [data-activo="3"] [data-poster-paso="3"],
+  [data-activo="4"] [data-poster-paso="4"],
+  [data-activo="1"] [data-cifra-paso="1"],
+  [data-activo="2"] [data-cifra-paso="2"],
+  [data-activo="3"] [data-cifra-paso="3"],
+  [data-activo="4"] [data-cifra-paso="4"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Con el 3D listo, el lienzo tapa el póster del paso que tiene pieza */
+  .visor-paso.con-pieza .visor-paso-lienzo { opacity: 1; }
+
+  .visor-paso-pie {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.1rem;
+    color: var(--texto-suave);
+    font-size: .9375rem;
+  }
+  .visor-paso-cuenta {
+    color: var(--tinta);
+    font-weight: 600;
+    font-stretch: 110%;
+    font-variant-numeric: tabular-nums;
+  }
+}
 
 /* --------------------------------------------------------------------------
    Opiniones: un panel en relieve sobre la pared

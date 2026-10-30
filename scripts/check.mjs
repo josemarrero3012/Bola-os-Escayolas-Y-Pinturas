@@ -25,8 +25,11 @@ for (const [, ruta] of css.matchAll(/url\("(\.\.\/[^"]+)"\)/g)) {
   if (!existsSync(join(raiz, "assets/css", ruta))) errores.push(`Falta el recurso ${ruta} (styles.css)`);
 }
 
-// Portada en 3D: modelo de Blender y, en la web compilada, el módulo empaquetado
-const tresD = ["assets/3d/roseton.glb", raiz === "." ? "src/portada-3d.js" : "assets/js/portada-3d.js"];
+// 3D: modelos y, en la web compilada, los módulos empaquetados
+const tresD = ["assets/3d/roseton.glb"];
+for (const visor of ["portada-3d.js", "pasos-3d.js"]) tresD.push(raiz === "." ? `src/${visor}` : `assets/js/${visor}`);
+// Piezas de «Cómo trabajamos» declaradas en la página
+for (const [, modelo] of html.matchAll(/\sdata-modelo="([^"]+)"/g)) tresD.push(modelo);
 for (const ruta of tresD) {
   if (!existsSync(join(raiz, ruta))) errores.push(`Falta ${ruta}`);
 }

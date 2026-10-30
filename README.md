@@ -13,7 +13,7 @@ La página es una habitación: empieza en el techo y termina en el rodapié. Cad
 - **Portada:** un rosetón de escayola modelado en Blender, en gris perla sobre un techo blanco, con hojas de acanto detalladas y oclusión ambiental horneada en Cycles. En escritorio se pinta en 3D en tiempo real: una luz rasante sigue al puntero y descubre el relieve, y al bajar la cámara se acerca y la pieza gira. Mientras carga, en móvil o sin WebGL se ve su render de Cycles. El titular se extiende como la pasta bajo la llana y los iconos de los oficios se trazan como con lápiz de obra.
 - **Servicios:** lista desplegable; en escritorio, un visor cambia de foto con una pasada de llana.
 - **Obra reciente:** las fotos aparecen enlucidas y se rascan al entrar en pantalla.
-- **Cómo trabajamos:** la línea del proceso se marca de punta a punta y los pasos se encienden en orden.
+- **Cómo trabajamos:** va justo después de los servicios. Los pasos bajan en vertical por una línea que se marca en rojo según avanzas. En escritorio, un visor fijo enseña la maqueta 3D animada del paso activo, y los pasos sin maqueta muestran su número en relieve. En móvil, cada paso lleva el render de su maqueta.
 
 Con «reducir movimiento» activado en el sistema, todo aparece ya terminado y la portada usa el render.
 
@@ -40,7 +40,18 @@ python blender/roseton.py build-3d
 npx @gltf-transform/cli meshopt build-3d/roseton.glb assets/3d/roseton.glb
 ```
 
-Los pósteres (`build-3d/roseton-*.png`) se pasan a WebP en `assets/img/`. El modelo publicado pesa unos 190 KB (60 KB comprimido).
+Los pósteres (`build-3d/roseton-*.png`) se pasan a WebP en `assets/img/`. El modelo publicado pesa unos 1,6 MB (600 KB comprimido) y solo se carga en escritorio.
+
+## Las maquetas de «Cómo trabajamos»
+
+Cada paso puede tener una maqueta hecha en Blender (un `.blend` y su `.glb` con la animación en un solo clip). `blender/paso.py` pasa sus materiales de marca a la paleta actual («Azul Bolaños» a verde, «Tinta de plano» a rojo) y renderiza con Cycles el póster con fondo transparente:
+
+```bash
+python blender/paso.py MAQUETA.blend MAQUETA.glb build-paso
+npx @gltf-transform/cli meshopt build-paso/paso.glb assets/3d/paso-N.glb
+```
+
+El póster (`build-paso/paso.png`) se pasa a WebP de 1000 × 1000 en `assets/img/paso-N.webp`. Para activar el paso N en `index.html`, se añade `data-modelo="assets/3d/paso-N.glb"` a su `<li>` y su `<figure class="paso-figura">`. En el visor, su `<span data-cifra-paso="N">` se cambia por `<img class="visor-paso-poster" data-poster-paso="N" …>`, como en el paso 1.
 
 ## Organización
 
