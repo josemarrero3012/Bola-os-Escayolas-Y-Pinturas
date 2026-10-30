@@ -20,6 +20,7 @@ Thumbs.db
 .codex/
 
 # Salida de Blender
+__pycache__/
 build-3d/
 build-paso*/
 build-maqueta*/

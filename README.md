@@ -13,7 +13,7 @@ La página es una habitación: empieza en el techo y termina en el rodapié. Cad
 - **Portada:** un rosetón de escayola modelado en Blender, en gris perla sobre un techo blanco, con hojas de acanto detalladas y oclusión ambiental horneada en Cycles. En escritorio se pinta en 3D en tiempo real: una luz rasante sigue al puntero y descubre el relieve, y al bajar la cámara se acerca y la pieza gira. Mientras carga, en móvil o sin WebGL se ve su render de Cycles. El titular se extiende como la pasta bajo la llana y los iconos de los oficios se trazan como con lápiz de obra.
 - **Servicios:** lista desplegable; en escritorio, un visor cambia de foto con una pasada de llana.
 - **Obra reciente:** las fotos aparecen enlucidas y se rascan al entrar en pantalla.
-- **Cómo trabajamos:** va justo después de los servicios. Los pasos bajan en vertical por una línea que se marca en rojo según avanzas. En escritorio, un visor fijo enseña la maqueta 3D animada del paso activo, y los pasos sin maqueta muestran su número en relieve. En móvil, cada paso lleva el render de su maqueta.
+- **Cómo trabajamos:** va justo después de los servicios. Los pasos bajan en vertical por una línea que se marca en rojo según avanzas. Cada paso tiene su maqueta animada, y cada una en un escenario distinto. En escritorio, un visor fijo enseña en 3D la del paso activo; en móvil, cada paso lleva su render. Un paso sin maqueta mostraría su número en relieve.
 
 Con «reducir movimiento» activado en el sistema, todo aparece ya terminado y la portada usa el render.
 
@@ -51,10 +51,12 @@ python blender/paso.py MAQUETA.blend MAQUETA.glb build-paso [--fotograma 96]
 npx @gltf-transform/cli meshopt build-paso/paso.glb assets/3d/paso-N.glb
 ```
 
-La maqueta del paso 02 (presupuesto por partidas, calculadora, sello y calendario con el plazo de obra) se genera entera con `blender/paso-2-presupuesto.py`, sobre la misma base, estudio y cámara que la del paso 01:
+Las maquetas de los pasos 02, 03 y 04 se generan enteras con sus scripts, cada una en su propio escenario: una mesa de obra sobre caballetes (presupuesto), una plataforma redonda de parqué (obra limpia) y la vivienda en planta (entrega y repaso). Comparten con la del paso 01 materiales, estudio de luces, cámara y bucle de 6 s, a través de `blender/maqueta_comun.py`:
 
 ```bash
-python blender/paso-2-presupuesto.py build-maqueta-2
+python blender/paso-2-presupuesto.py build-maqueta-2      # póster: --fotograma 131
+python blender/paso-3-obra-limpia.py build-maqueta-3      # póster: --fotograma 112
+python blender/paso-4-entrega.py build-maqueta-4          # póster: --fotograma 120
 python blender/paso.py build-maqueta-2/02-presupuesto-por-escrito.blend build-maqueta-2/02-presupuesto-por-escrito.glb build-paso --fotograma 131
 ```
 
