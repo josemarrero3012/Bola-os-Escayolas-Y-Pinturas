@@ -25,7 +25,7 @@ roble = mat("Parqué de roble", "D6B994", .62)
 roble_claro = mat("Parqué de roble claro", "E2CAA4", .62)
 baldosa = mat("Baldosa porcelánica", "ECE9E3", .42)
 vidrio = mat("Vidrio", "D7E3E2", .08)
-tapizado = mat("Tapizado salvia", "93A698", .92)
+tapizado = mat("Tapizado salvia", "E3CFBB", .92)
 laton = mat("Latón", "D9B66A", .3, .85)
 agua = mat("Agua", "D3E3E4", .32)
 

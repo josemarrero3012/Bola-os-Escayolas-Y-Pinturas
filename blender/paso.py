@@ -1,6 +1,6 @@
 # Prepara la pieza de un paso de «Cómo trabajamos» para la web.
-# 1. Pasa los materiales de marca de la pieza a la paleta actual (verde y rojo
-#    Bolaños) en el GLB, sin tocar la geometría ni la animación.
+# 1. Pasa los materiales de marca de la pieza a la paleta actual (naranja y
+#    blanco Bolaños) en el GLB, sin tocar la geometría ni la animación.
 # 2. Abre el .blend, aplica los mismos colores y renderiza con Cycles el póster
 #    con fondo transparente (se ve en móvil y mientras carga el 3D).
 #
@@ -32,9 +32,10 @@ def lineal(hexa):
 
 # Material de la pieza -> color de la paleta (los demás se quedan como están)
 PALETA = {
-    "Azul Bolaños": lineal("#0E3B2A"),      # verde Bolaños
-    "Goma azul oscura": lineal("#072B1F"),  # verde más hondo
-    "Tinta de plano": lineal("#D10A22"),    # cotas y trazos en el rojo de la marca
+    "Azul Bolaños": lineal("#D9561A"),      # naranja Bolaños
+    "Goma azul oscura": lineal("#2E1A10"),  # tostado muy oscuro
+    "Tinta de plano": lineal("#A83A0C"),    # cotas y trazos en naranja hondo
+    "Tapizado salvia": lineal("#E3CFBB"),   # lino cálido, sin verdes
 }
 
 # 1. GLB: los colores viven en el bloque JSON
