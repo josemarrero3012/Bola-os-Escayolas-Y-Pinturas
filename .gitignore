@@ -21,4 +21,5 @@ Thumbs.db
 
 # Salida de Blender
 build-3d/
-build-paso/
+build-paso*/
+build-maqueta*/
