@@ -1,10 +1,13 @@
 // Portada en 3D: el rosetón de escayola modelado en Blender (blender/roseton.py),
-// sobre un techo pintado en el verde de la casa. Una luz rasante sigue al puntero
-// y deja ver el relieve; al bajar, la cámara se acerca y la pieza gira despacio.
+// en gris perla sobre un techo blanco. Una luz rasante sigue al puntero y deja ver
+// el relieve; al bajar, la cámara se acerca y la pieza gira despacio. La pieza trae
+// su oclusión ambiental horneada en Blender en los colores de vértice.
 import {
-  ACESFilmicToneMapping,
+  NeutralToneMapping,
+  PMREMGenerator,
   HemisphereLight,
   Color,
+  DoubleSide,
   Group,
   Mesh,
   MeshStandardMaterial,
@@ -19,37 +22,47 @@ import {
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
-const VERDE = new Color("#0e3a2b");
-const YESO = new Color("#e9e7e1");
+const TECHO = new Color("#efeeeb");
+const FONDO = new Color("#eeedea");   // igual que --techo-blanco en la hoja de estilos
+const GRIS = new Color("#b4b4b0");    // escayola gris perla
+const OCLUSION = 0.5;                  // cuánto oscurece la oclusión horneada (0 a 1)
 
 export async function iniciar({ lienzo, escenario, modelo, alListo }) {
   const renderer = new WebGLRenderer({ canvas: lienzo, antialias: true, alpha: false, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.outputColorSpace = SRGBColorSpace;
-  renderer.toneMapping = ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMapping = NeutralToneMapping;   // respeta el blanco del techo
+  renderer.toneMappingExposure = 1;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = VSMShadowMap;   // sombras suaves, como bajo una lámpara de obra
 
   const escena = new Scene();
-  escena.background = VERDE.clone().multiplyScalar(0.35);
+  escena.background = FONDO;
+  // Luz de habitación suave para que las curvas de la escayola no queden planas
+  const pmrem = new PMREMGenerator(renderer);
+  escena.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  escena.environmentIntensity = 0.2;
+  pmrem.dispose();
 
   // Techo: plano en z = 0 mirando a la cámara
   const techo = new Mesh(
     new PlaneGeometry(14, 14),
-    new MeshStandardMaterial({ color: VERDE, roughness: 0.75, metalness: 0 })
+    new MeshStandardMaterial({ color: TECHO, roughness: 0.9, metalness: 0 })
   );
   techo.receiveShadow = true;
   escena.add(techo);
 
   const camara = new PerspectiveCamera(29, 1, 0.1, 40);
 
-  // Rebote de luz: la escayola en sombra queda gris, no verde
-  escena.add(new HemisphereLight(new Color("#fbf7f0"), new Color("#56635b"), 0.55));
+  // Luz del cuarto: el techo mira a la cámara (+Z), así que el cielo va en +Z
+  const cuarto = new HemisphereLight(new Color("#ffffff"), new Color("#cfccc6"), 0.78);
+  cuarto.position.set(0, 0, 1);
+  escena.add(cuarto);
 
   // Luz rasante: casi a ras del techo, para que cada hoja proyecte sombra
-  const luz = new SpotLight(new Color("#fff3e2"), 60, 0, 0.36, 0.7, 1.1);
+  const luz = new SpotLight(new Color("#fff6ea"), 34, 0, 0.36, 0.7, 1.1);
   luz.castShadow = true;
   luz.shadow.mapSize.set(2048, 2048);
   luz.shadow.bias = -0.0005;
@@ -60,8 +73,8 @@ export async function iniciar({ lienzo, escenario, modelo, alListo }) {
   luz.shadow.camera.far = 9;
   escena.add(luz, luz.target);
 
-  // Relleno frío desde el lado contrario
-  const relleno = new SpotLight(new Color("#dde8e1"), 6, 0, 0.9, 1, 1.4);
+  // Relleno neutro desde el lado contrario
+  const relleno = new SpotLight(new Color("#f2f2f0"), 4, 0, 0.9, 1, 1.4);
   relleno.position.set(2.4, -1.6, 2.6);
   escena.add(relleno, relleno.target);
 
@@ -73,7 +86,16 @@ export async function iniciar({ lienzo, escenario, modelo, alListo }) {
   const grupo = new Group();
   pieza.traverse((o) => {
     if (o.isMesh) {
-      o.material = new MeshStandardMaterial({ color: YESO, roughness: 0.82, metalness: 0 });
+      // La oclusión horneada llega entera; se suaviza para que los fondos queden en gris, no en negro
+      const ao = o.geometry.getAttribute("color");
+      if (ao) {
+        const suavizar = (c) => 1 - (1 - c) * OCLUSION;
+        for (let i = 0; i < ao.count; i++) {
+          ao.setXYZ(i, suavizar(ao.getX(i)), suavizar(ao.getY(i)), suavizar(ao.getZ(i)));
+        }
+        ao.needsUpdate = true;
+      }
+      o.material = new MeshStandardMaterial({ color: GRIS, roughness: 0.9, metalness: 0, vertexColors: true, side: DoubleSide });
       o.castShadow = true;
       o.receiveShadow = true;
     }

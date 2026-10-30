@@ -10,7 +10,7 @@ Propuesta de web para **Escayolas y Pinturas Bolaños**, empresa de escayola, pl
 
 La página es una habitación: empieza en el techo y termina en el rodapié. Cada animación sale del oficio:
 
-- **Portada:** un rosetón de escayola modelado en Blender, sobre un techo pintado en el verde de la casa. En escritorio se pinta en 3D en tiempo real: una luz rasante sigue al puntero y descubre el relieve, y al bajar la cámara se acerca y la pieza gira. Mientras carga, en móvil o sin WebGL se ve su render de Cycles. El titular se extiende como la pasta bajo la llana y los iconos de los oficios se trazan como con lápiz de obra.
+- **Portada:** un rosetón de escayola modelado en Blender, en gris perla sobre un techo blanco, con hojas de acanto detalladas y oclusión ambiental horneada en Cycles. En escritorio se pinta en 3D en tiempo real: una luz rasante sigue al puntero y descubre el relieve, y al bajar la cámara se acerca y la pieza gira. Mientras carga, en móvil o sin WebGL se ve su render de Cycles. El titular se extiende como la pasta bajo la llana y los iconos de los oficios se trazan como con lápiz de obra.
 - **Servicios:** lista desplegable; en escritorio, un visor cambia de foto con una pasada de llana.
 - **Obra reciente:** las fotos aparecen enlucidas y se rascan al entrar en pantalla.
 - **Cómo trabajamos:** la línea del proceso se marca de punta a punta y los pasos se encienden en orden.
