@@ -10,7 +10,7 @@ Propuesta de web para **Escayolas y Reformas Bolaños**, empresa de escayola, pl
 
 La página es una habitación: empieza en el techo y termina en el rodapié. Cada animación sale del oficio:
 
-- **Portada:** un rosetón de escayola modelado en Blender, en gris perla sobre un techo blanco, con hojas de acanto detalladas y oclusión ambiental horneada en Cycles. En escritorio se pinta en 3D en tiempo real: una luz rasante sigue al puntero y descubre el relieve, y al bajar la cámara se acerca y la pieza gira. Mientras carga, en móvil o sin WebGL se ve su render de Cycles. El titular se extiende como la pasta bajo la llana y los iconos de los oficios se trazan como con lápiz de obra.
+- **Portada:** «Arquitectura suspendida», siete piezas de escayola modeladas en Blender por José Manuel: arco, paneles moldurados, medio rosetón de acanto, dos cornisas y un panel terracota. En escritorio se pinta en 3D en tiempo real con la misma cámara ortográfica de tres cuartos del render, así que encaja encima de la imagen sin salto. Al bajar, las piezas se abren por capas siguiendo los estados de su `transforms.json` (`hero` → `scrollStart` → `scrollMid` → `exit`): la composición va al centro, gira un poco hacia el frente y al final sale hacia abajo a la derecha. El puntero la inclina levemente. Mientras carga, en móvil o sin WebGL se ve su render de Cycles. El titular se extiende como la pasta bajo la llana y los iconos de los oficios se trazan como con lápiz de obra.
 - **Servicios:** lista desplegable; en escritorio, un visor cambia de foto con una pasada de llana.
 - **Obra reciente:** las fotos aparecen enlucidas y se rascan al entrar en pantalla.
 - **Cómo trabajamos:** va justo después de los servicios. Los pasos bajan en vertical por una línea que se marca en naranja según avanzas. Cada paso tiene su maqueta animada, y cada una en un escenario distinto. En escritorio, un visor fijo enseña en 3D la del paso activo; en móvil, cada paso lleva su render. Un paso sin maqueta mostraría su número en relieve.
@@ -31,16 +31,20 @@ npm run check:dist # comprueba la copia de dist/
 
 Abrir `index.html` sin compilar funciona, pero la portada se queda con el render: el 3D solo existe en `dist/`.
 
-## El rosetón en Blender
+## La pieza de la portada
 
-`blender/roseton.py` modela la pieza por procedimiento (base torneada, sarta de perlas, hojas de acanto y florón gallonado), la exporta a GLB y renderiza con Cycles los pósteres de escritorio y móvil. Necesita el módulo `bpy` de Blender 5.x (`pip install bpy` con Python 3.13):
+La pieza se modela fuera del repositorio, en la carpeta `bolanos-3d` de José Manuel (Blender 5.2, con sus scripts de construcción, validación y render). A la web llegan tres cosas:
+
+- `assets/3d/arquitectura.glb`: su `exports/bolanos_architecture.glb` con las texturas en WebP y la geometría comprimida con meshopt (de 6,1 MB a 1,1 MB). Solo se carga en escritorio.
+- `src/portada-estados.json`: los cuatro estados de `animation/transforms.json` (posición, giro Euler XYZ en radianes y escala de cada pieza, locales a `Hero_Architecture`).
+- `assets/img/arquitectura-escritorio.webp` y `arquitectura-movil.webp`: su `renders/hero_transparent.png` reducido.
 
 ```bash
-python blender/roseton.py build-3d
-npx @gltf-transform/cli meshopt build-3d/roseton.glb assets/3d/roseton.glb
+npx @gltf-transform/cli webp bolanos_architecture.glb tmp.glb --quality 90
+npx @gltf-transform/cli meshopt tmp.glb assets/3d/arquitectura.glb
 ```
 
-Los pósteres (`build-3d/roseton-*.png`) se pasan a WebP en `assets/img/`. El modelo publicado pesa unos 1,6 MB (600 KB comprimido) y solo se carga en escritorio.
+Si cambia la cámara `Camera_Three_Quarter` del `.blend`, hay que copiar su posición, dirección y `ortho_scale` a las constantes del principio de `src/portada-3d.js` para que el 3D siga encajando con el render.
 
 ## Las maquetas de «Cómo trabajamos»
 
@@ -66,12 +70,12 @@ El póster (`build-paso/paso.png`) se pasa a WebP de 1000 × 1000 en `assets/img
 
 ```text
 .github/         Publicación en GitHub Pages, verificación y plantilla de pull requests
-assets/3d/       Rosetón en GLB (comprimido con meshopt)
+assets/3d/       Pieza de la portada y maquetas en GLB (comprimidas con meshopt)
 assets/css/      Estilos
 assets/fonts/    Archivo (fuente variable, servida desde el propio sitio)
 assets/img/      Imágenes optimizadas que se publican
 assets/js/       Comportamiento del navegador
-blender/         Rosetón y maquetas de «Cómo trabajamos», con sus renders
+blender/         Maquetas de «Cómo trabajamos», con sus renders
 images/          Fotos originales del negocio; no se publican
 scripts/         Compilación y verificación
 src/             Portada en 3D (three.js); se empaqueta al compilar

@@ -1,7 +1,7 @@
 /* ==========================================================================
    Escayolas y Pinturas Bolaños
-   Concepto: la página es una habitación. Empieza en un techo blanco con un
-   rosetón de escayola bajo luz rasante, y termina en el suelo con un rodapié.
+   Concepto: la página es una habitación. Empieza con piezas de escayola
+   suspendidas (arco, cornisas, rosetón) y termina en el suelo con un rodapié.
    ========================================================================== */
 
 @font-face {
@@ -362,10 +362,10 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 }
 
 /* --------------------------------------------------------------------------
-   Portada: un rosetón de escayola en un techo pintado en blanco
-   La pieza está modelada en Blender (blender/roseton.py). En escritorio se
-   pinta en 3D con una luz rasante que sigue al puntero; mientras carga, en
-   móvil o sin WebGL, se ve su render de Cycles.
+   Portada: «Arquitectura suspendida», siete piezas de escayola modeladas en
+   Blender. En escritorio se pinta en 3D y, al bajar, las piezas se abren por
+   capas y salen hacia abajo; mientras carga, en móvil o sin WebGL, se ve su
+   render de Cycles en el mismo sitio y con el mismo encuadre.
    -------------------------------------------------------------------------- */
 
 .portada {
@@ -383,26 +383,41 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   min-height: 100svh;
 }
 
-.portada-poster,
 .portada-lienzo {
   position: absolute;
   inset: 0;
   z-index: -2;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  /* Las piezas que bajan se funden con el pie de la portada en vez de cortarse */
+  -webkit-mask-image: linear-gradient(#000 80%, transparent 99%);
+  mask-image: linear-gradient(#000 80%, transparent 99%);
+}
+/* El render ocupa la derecha, entre la cabecera y los oficios. El 3D toma su
+   rectángulo como encuadre, así que al entrar encaja encima sin saltar. */
+.portada-poster {
+  position: absolute;
+  z-index: -2;
+  top: calc(var(--cabecera) + 1svh);
+  bottom: clamp(6.5rem, 15svh, 10rem);
+  right: var(--margen);
+  /* Nunca por debajo del texto: deja libres sus 34rem y un respiro */
+  width: max(20rem, min(52vw, 60rem, 100vw - 2 * var(--margen) - 36rem));
+  transition: opacity 1.2s ease;
 }
 .portada-poster img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: 70% 50%;
+  object-fit: contain;
+  object-position: right top;
   animation: amanecer 2.2s var(--salida) both;
 }
-.portada-lienzo {
-  opacity: 0;
-  transition: opacity 1.4s ease;
-}
 .portada.en-3d .portada-lienzo { opacity: 1; }
+.portada.en-3d .portada-poster { opacity: 0; }
+/* Al bajar, el velo que protege el texto se retira junto con el texto */
+.portada.con-3d .portada-escena::before { opacity: calc(1 - var(--p) * 2); }
 
 /* Velo de cal para que el texto se lea sobre el techo */
 .portada-escena::before {
@@ -511,12 +526,11 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 @media (pointer: fine) and (min-width: 960px) {
   .portada-pista { display: inline-flex; }
   .portada.en-3d .portada-pista { opacity: 1; transition-delay: 1.5s; }
-  .portada.en-3d.luz-usada .portada-pista { opacity: 0; transition-delay: 0s; }
 }
 
-/* Con 3D la portada dura algo más que la pantalla: al bajar, la cámara se acerca a la pieza */
+/* Con 3D la portada dura más que la pantalla: es el recorrido en el que la pieza se abre */
 @media (min-width: 960px) {
-  .portada.con-3d { height: 165svh; }
+  .portada.con-3d { height: 240svh; }
   .portada.con-3d .portada-escena {
     position: sticky;
     top: 0;
@@ -546,7 +560,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   padding: 0;
   list-style: none;
   border-top: 1px solid var(--sombra);
-  /* La junta se desvanece antes de cruzar el rosetón */
+  /* La junta se desvanece antes de cruzar la pieza */
   border-image: linear-gradient(90deg, var(--sombra) 0 34%, transparent 54%) 1;
   animation: asentar 1.1s var(--salida) 1.5s both;
 }
@@ -612,7 +626,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   .oficio p { margin-top: -.55rem; }
 }
 
-/* Móvil: texto, el rosetón entero y los oficios, uno tras otro */
+/* Móvil: texto, la pieza entera y los oficios, uno tras otro */
 @media (max-width: 719px) {
   .portada-escena { flex-direction: column; }
   .portada-escena::before { display: none; }
@@ -625,17 +639,17 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
   .portada-poster {
     order: 3;
     position: relative;
+    inset: auto;
     z-index: 0;
-    height: auto;
-    margin-top: -2rem;
-    -webkit-mask-image: linear-gradient(transparent, #000 30%, #000 72%, transparent);
-    mask-image: linear-gradient(transparent, #000 30%, #000 72%, transparent);
+    width: min(100% - 2 * var(--margen), 28rem);
+    margin: 1rem auto 0;
   }
   .portada-poster img {
-    aspect-ratio: 1;
-    object-position: 50% 92%;
+    height: auto;
+    aspect-ratio: 8 / 9;
+    object-position: center;
   }
-  .oficios { order: 4; margin-top: -2.5rem; margin-bottom: 1.5rem; }
+  .oficios { order: 4; margin-top: 0; margin-bottom: 1.5rem; }
 }
 
 @keyframes trazar {

@@ -61,7 +61,7 @@
     }
   });
 
-  // Portada: avance del desplazamiento (para el texto) y rosetón en 3D en pantallas grandes
+  // Portada: avance del desplazamiento (para el texto) y la pieza en 3D en pantallas grandes
   if (portada) {
     const marcarAvance = () => {
       const r = portada.getBoundingClientRect();
@@ -75,18 +75,18 @@
     const lienzo = portada.querySelector("[data-lienzo]");
     if (grande && webgl() && !quieto.matches && lienzo) {
       portada.classList.add("con-3d");
-      portada.addEventListener("pointermove", () => portada.classList.add("luz-usada"), { once: true });
       import("./portada-3d.js")
         .then(({ iniciar }) =>
           iniciar({
             lienzo,
             escenario: portada,
-            modelo: "assets/3d/roseton.glb",
+            poster: portada.querySelector(".portada-poster img"),
+            modelo: "assets/3d/arquitectura.glb",
             alListo: () => portada.classList.add("en-3d"),
           })
         )
         .catch(() => {
-          // Sin 3D se queda el render de Cycles, sin el recorrido de cámara
+          // Sin 3D se queda el render de Cycles, sin el recorrido de scroll
           portada.classList.remove("con-3d");
         });
     }
