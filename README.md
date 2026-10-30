@@ -47,8 +47,15 @@ Los pósteres (`build-3d/roseton-*.png`) se pasan a WebP en `assets/img/`. El mo
 Cada paso puede tener una maqueta hecha en Blender (un `.blend` y su `.glb` con la animación en un solo clip). `blender/paso.py` pasa sus materiales de marca a la paleta actual («Azul Bolaños» a verde, «Tinta de plano» a rojo) y renderiza con Cycles el póster con fondo transparente:
 
 ```bash
-python blender/paso.py MAQUETA.blend MAQUETA.glb build-paso
+python blender/paso.py MAQUETA.blend MAQUETA.glb build-paso [--fotograma 96]
 npx @gltf-transform/cli meshopt build-paso/paso.glb assets/3d/paso-N.glb
+```
+
+La maqueta del paso 02 (presupuesto por partidas, calculadora, sello y calendario con el plazo de obra) se genera entera con `blender/paso-2-presupuesto.py`, sobre la misma base, estudio y cámara que la del paso 01:
+
+```bash
+python blender/paso-2-presupuesto.py build-maqueta-2
+python blender/paso.py build-maqueta-2/02-presupuesto-por-escrito.blend build-maqueta-2/02-presupuesto-por-escrito.glb build-paso --fotograma 131
 ```
 
 El póster (`build-paso/paso.png`) se pasa a WebP de 1000 × 1000 en `assets/img/paso-N.webp`. Para activar el paso N en `index.html`, se añade `data-modelo="assets/3d/paso-N.glb"` a su `<li>` y su `<figure class="paso-figura">`. En el visor, su `<span data-cifra-paso="N">` se cambia por `<img class="visor-paso-poster" data-poster-paso="N" …>`, como en el paso 1.
@@ -62,7 +69,7 @@ assets/css/      Estilos
 assets/fonts/    Archivo (fuente variable, servida desde el propio sitio)
 assets/img/      Imágenes optimizadas que se publican
 assets/js/       Comportamiento del navegador
-blender/         Modelo y render del rosetón
+blender/         Rosetón y maquetas de «Cómo trabajamos», con sus renders
 images/          Fotos originales del negocio; no se publican
 scripts/         Compilación y verificación
 src/             Portada en 3D (three.js); se empaqueta al compilar

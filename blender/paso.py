@@ -13,10 +13,14 @@ from pathlib import Path
 
 import bpy
 
-argumentos = [a for a in sys.argv[1:] if not a.startswith("--")]
-BLEND, GLB, SALIDA = (Path(a) for a in argumentos[-3:])
+argumentos = sys.argv[1:]
+fotograma = 96
+if "--fotograma" in argumentos:
+    i = argumentos.index("--fotograma")
+    fotograma = int(argumentos[i + 1])
+    del argumentos[i:i + 2]
+BLEND, GLB, SALIDA = (Path(a) for a in [a for a in argumentos if not a.startswith("--")][-3:])
 SALIDA.mkdir(parents=True, exist_ok=True)
-fotograma = int(sys.argv[sys.argv.index("--fotograma") + 1]) if "--fotograma" in sys.argv else 96
 rapido = "--rapido" in sys.argv
 
 
