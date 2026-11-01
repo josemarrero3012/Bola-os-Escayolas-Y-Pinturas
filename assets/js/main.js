@@ -22,10 +22,12 @@
     if (!cabecera.classList.contains("menu-abierto")) {
       cabecera.classList.toggle("is-oculta", y > ultimoScroll && y > 320);
     }
-    // En escritorio «Qué hacemos» sube por encima del final de la portada: la cabecera
-    // deja de ser transparente cuando esa sección llega arriba
+    // Con el 3D la portada se queda fija mientras «Qué hacemos» sube por encima: la
+    // cabecera es transparente hasta que esa sección llega arriba. Sin 3D (móvil, tableta)
+    // el texto de la portada pasa por debajo del logo, así que se cubre en cuanto se baja.
     const finPortada = portada.nextElementSibling.offsetTop - cabecera.offsetHeight;
-    cabecera.classList.toggle("sobre-portada", y < finPortada);
+    const fija = portada.classList.contains("con-3d");
+    cabecera.classList.toggle("sobre-portada", y < finPortada && (fija || y <= 8));
     if (barra) barra.classList.toggle("visible", y > window.innerHeight * .6);
     ultimoScroll = y;
   };
@@ -107,6 +109,7 @@
     };
 
     portada.classList.add("con-3d");
+    alDesplazar();
     medir();
     progreso.valor = objetivo;   // al recargar a mitad de página, sin animar desde arriba
     pintar();
@@ -130,6 +133,7 @@
         window.removeEventListener("scroll", medir);
         window.removeEventListener("resize", medir);
         portada.classList.remove("con-3d", "sin-texto");
+        alDesplazar();
         portada.style.removeProperty("--dispersion");
         siguiente.style.removeProperty("--entrada");
       });

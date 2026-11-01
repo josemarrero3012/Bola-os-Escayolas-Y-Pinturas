@@ -362,7 +362,7 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
 }
 
 /* --------------------------------------------------------------------------
-   Portada: «Arquitectura suspendida», siete piezas de escayola modeladas en
+   Portada: «Arquitectura suspendida», seis piezas de escayola modeladas en
    Blender. En escritorio se pinta en 3D y, al bajar, las piezas se abren por
    capas y después se dispersan hacia los bordes mientras «Qué hacemos» sube por
    encima; mientras carga, en móvil o sin WebGL, se ve su render de Cycles en el
@@ -668,14 +668,18 @@ li[id] { scroll-margin-top: calc(var(--cabecera) + 1rem); }
     inset: auto;
     z-index: 0;
     width: min(100% - 2 * var(--margen), 28rem);
-    margin: 1rem auto 0;
+    margin: 2.25rem auto 0;
   }
+  /* El render de móvil va recortado a la pieza: sin aire transparente arriba ni abajo */
   .portada-poster img {
     height: auto;
-    aspect-ratio: 8 / 9;
+    aspect-ratio: 800 / 825;
     object-position: center;
   }
-  .oficios { order: 4; margin-top: 0; margin-bottom: 1.5rem; }
+  .oficios { order: 4; margin-top: 1rem; margin-bottom: .5rem; }
+  /* El techo se funde con el yeso de la página: sin costura antes de «Qué hacemos» */
+  .portada { background: linear-gradient(var(--techo-blanco) 60%, rgb(238 237 234 / 0)); }
+  .portada + .seccion { padding-top: 3.5rem; }
 }
 
 @keyframes trazar {

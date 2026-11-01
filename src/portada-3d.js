@@ -1,6 +1,7 @@
 // Portada en 3D: «Arquitectura suspendida», la composición de escayola que José Manuel
-// modeló en Blender (arco, paneles, medio rosetón, cornisas y panel terracota).
-// Al bajar, las siete piezas se abren por capas siguiendo los estados de su
+// modeló en Blender (arco, paneles, medio rosetón y cornisas), toda en blanco yeso:
+// el panel terracota se quitó porque su canto, muy alto, cruzaba todo al bajar.
+// Al bajar, las seis piezas se abren por capas siguiendo los estados de su
 // transforms.json (hero → scrollStart → scrollMid) y después se dispersan en abanico
 // hacia los bordes de la pantalla, creciendo y desvaneciéndose mientras sube «Qué
 // hacemos». La cámara es la misma ortográfica de tres cuartos del render y la luz, el
@@ -40,10 +41,8 @@ const EMPUJE = 0.14;            // la cámara avanza un poco mientras las piezas
 const CRECER = 0.45;            // cada pieza crece hasta un 45 % camino del borde
 const ESCALONADO = 0.12;        // las piezas de delante salen antes que las del fondo
 const LLEGADA = 0.8;            // en ese punto de la salida la última pieza cruza el borde
-const GIRO_ABANICO = 0.35;      // el abanico gira ~20°: el arco sale hacia la izquierda y no cruza el titular que sube
+const GIRO_ABANICO = 0.87;      // el abanico gira ~50°: con seis piezas, el arco sale hacia arriba a la izquierda y no cruza el titular que sube
 const DESATURAR_ESCAYOLA = 0.6;
-const DESATURAR_BARRO = 0.15;
-const ACLARAR_BARRO = 1.45;
 
 // Estudio de blender/portada-luz.py en ejes glTF: posición, tamaño (ancho × alto), color
 // y vatios de cada luz de área. Aquí son paneles que brillan en el entorno y dan los
@@ -95,7 +94,7 @@ export async function iniciar({ lienzo, escenario, poster, modelo, progreso, alL
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = SRGBColorSpace;
-  renderer.toneMapping = NeutralToneMapping;   // conserva el blanco de la escayola y el naranja del panel
+  renderer.toneMapping = NeutralToneMapping;   // conserva el blanco de la escayola
   renderer.toneMappingExposure = 1.0;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = VSMShadowMap;   // sombras suaves, como bajo un softbox
@@ -137,18 +136,16 @@ export async function iniciar({ lienzo, escenario, poster, modelo, progreso, alL
     const m = o.material;
     if (ajustados.has(m)) return;
     ajustados.add(m);
-    // La veladura satinada del render: la escayola, más brillante; el barro, menos
+    // La veladura satinada del render
     if (m.isMeshPhysicalMaterial) {
-      const barro = m.name.startsWith("Terracotta");
       m.specularIntensity = 0.8;
-      m.clearcoat = barro ? 0.3 : 0.5;
-      m.clearcoatRoughness = barro ? 0.08 : 0.06;
+      m.clearcoat = 0.5;
+      m.clearcoatRoughness = 0.06;
     }
     // Blender pinta con AgX, que apaga la saturación de los claros; aquí la escayola
-    // se acerca al gris para que no amarillee y el barro se aclara un poco, como en el render
+    // se acerca al gris para que no amarillee, como en el render
     const gris = m.color.r * 0.2126 + m.color.g * 0.7152 + m.color.b * 0.0722;
     if (m.name.startsWith("Plaster")) m.color.lerp(new Color(gris, gris, gris), DESATURAR_ESCAYOLA);
-    if (m.name.startsWith("Terracotta")) m.color.lerp(new Color(gris, gris, gris), DESATURAR_BARRO).multiplyScalar(ACLARAR_BARRO);
   });
   // El puntero inclina el conjunto sin tocar las transformaciones de cada pieza
   const conjunto = new Group();
@@ -226,7 +223,7 @@ export async function iniciar({ lienzo, escenario, poster, modelo, progreso, alL
   };
 
   // Dispersión: cada pieza sale en línea recta desde el centro de la composición. Las
-  // siete direcciones se reparten en abanico regular, en el orden en que ya están las
+  // seis direcciones se reparten en abanico regular, en el orden en que ya están las
   // piezas en pantalla, para que lleguen a todos los bordes y no se amontonen en uno.
   // Se calcula una vez, con la pieza abierta y la cámara como queda al final de la apertura.
   colocar(abierto);
