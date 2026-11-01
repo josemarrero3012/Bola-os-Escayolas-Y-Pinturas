@@ -73,6 +73,10 @@ escena.render.film_transparent = True
 escena.cycles.samples = muestras
 escena.cycles.use_denoising = True
 bpy.data.objects["Studio_Ground"].hide_render = True
+# La web ya no lleva el panel terracota: su canto, muy alto, cruzaba la pantalla al bajar
+for objeto in bpy.data.objects:
+    if objeto.name.startswith("Terracotta_Panel"):
+        objeto.hide_render = True
 escena.render.filepath = salida
 bpy.ops.render.render(write_still=True)
 print("PORTADA_RENDERIZADA", salida, flush=True)
